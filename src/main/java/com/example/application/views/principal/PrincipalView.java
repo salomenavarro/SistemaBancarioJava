@@ -15,21 +15,15 @@ import org.vaadin.lineawesome.LineAwesomeIconUrl;
 public class PrincipalView extends Composite<VerticalLayout> {
 
     public PrincipalView() {
-        HorizontalLayout layoutRow = new HorizontalLayout();
-        VerticalLayout layoutColumn2 = new VerticalLayout();
-        HorizontalLayout layoutRow2 = new HorizontalLayout();
-        getContent().setWidth("100%");
-        getContent().getStyle().set("flex-grow", "1");
-        layoutRow.addClassName(Gap.MEDIUM);
-        layoutRow.setWidth("100%");
-        layoutRow.setHeight("min-content");
-        layoutColumn2.setWidth("100%");
-        layoutColumn2.getStyle().set("flex-grow", "1");
-        layoutRow2.addClassName(Gap.MEDIUM);
-        layoutRow2.setWidth("100%");
-        layoutRow2.setHeight("min-content");
-        getContent().add(layoutRow);
-        getContent().add(layoutColumn2);
-        getContent().add(layoutRow2);
+       getContent().setWidth("100%");
+        getContent().setPadding(false);
+        getContent().setSpacing(false);
+
+        getContent().add(new HeroSection());
+        getContent().add(new TiposDeCuentasSection());
+        getContent().add(new UsuariosSection());
+        getContent().add(new TransferenciasSection());
+        getContent().add(new CreditosSection());
+        getContent().add(new PagosSection());
     }
 }
