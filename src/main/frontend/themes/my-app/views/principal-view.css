@@ -1,165 +1,164 @@
-.principal-view {
-  padding: 2px;
-  box-sizing: border-box;
-  display: block;
-  position: relative;
-  height: 100%;
-  overflow-y: auto;
-  --cv-blue: 212 96% 54%;
-  --cv-purple: 259 97% 66%;
-  --cv-dropzone-border-color: hsl(var(--cv-blue) / 0.5);
-  --cv-dropzone-bg-color: hsl(var(--cv-blue) / 0.2);
-  --cv-droptarget-border-color: hsl(var(--cv-purple) / 1);
-  --cv-droptarget-bg-color: hsl(var(--cv-purple) / 0.4);
-  --cv-stripe-width: 1.5px;
-  --cv-stripe-gap: 9px;
-  --cv-stripe-color: hsl(var(--cv-blue) / 0.2);
-  --cv-layout-border-color: var(--lumo-contrast-40pct);
-  --cv-checkerboard-color1: hsl(0 0% 0% / 0.05);
-  --cv-checkerboard-color2: hsl(0 0% 100% / 0.05);
-  --cv-checkerboard-size: 16px;
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESS — Estilos 
+   Archivo: src/main/frontend/themes/my-app/views/principal-view.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+/* ── VARIABLES GLOBALES ──────────────────────────────────────────────────── */
+:root {
+  --dess-verde-oscuro:       #265C4B;
+  --dess-verde-medio:        #146551;
+  --dess-verde:              #007566;
+  --dess-verde-suave:        #589A8D;
+  --dess-verde-claro:        #8FC1B5;
+  --dess-blanco:             #FFFFFF;
+  --dess-fondo:              #f7faf9;
+  --dess-borde:              #e0eeeb;
+  --dess-texto-suave:        #589A8D;
+  --dess-fuente-principal:   'Playfair Display', serif;
 }
 
-.principal-view[dragging] {
-  --cv-checkerboard-color1: hsl(var(--cv-blue) / 0.2);
-  --cv-checkerboard-color2: hsl(var(--cv-blue) / 0.1);
-  --cv-layout-border-color: var(--cv-dropzone-border-color);
-}
 
-.principal-view .preview-container {
-  display: contents;
-}
 
-/* The root layout is not necessarily inside a flex box so width/height needs to be used */
-.principal-view .preview-container > .layout[style*='align-self: stretch'] {
+/* ══════════════════════════════════════════════════════════════════════════════
+   PAGOS SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.pagos_section {
+  background: var(--dess-blanco);
   width: 100%;
 }
-.principal-view .preview-container > .layout[style*='flex-grow: 1'] {
-  height: 100%;
+
+/* ── Encabezado reutilizable — también sirve para las secciones del equipo ── */
+.pagos_section .section_encabezado {
+  padding: 48px 48px 0 48px;
 }
 
-/* Apply some default gap and padding to layouts that don't have inline styles for them while dragging. */
-.principal-view[dragging] .layout:not([style*='gap:']) {
-  gap: 8px;
-}
-
-.principal-view[dragging] .layout:not([style*='padding:'], [empty]) {
-  padding: 8px;
-}
-
-.principal-view .cover-overlay {
-  position: absolute;
-  border-radius: 1px;
-}
-
-.principal-view:not([starting-drag]) .cover-overlay.editable-hovering {
-  outline: 2px solid hsl(var(--cv-blue) / 1);
-  outline-offset: -1px;
-}
-
-.principal-view:not([starting-drag]) .cover-overlay.editable-editing {
-  outline: 1px solid hsl(var(--cv-blue) / 1);
-  outline-offset: -1px;
-  box-shadow: inset 0 0 0 2px var(--lumo-base-color);
-}
-
-.principal-view .overlays,
-.principal-view .drop-zones {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.principal-view:not([dragging]) .drop-zones {
-  pointer-events: none;
-}
-
-.principal-view .drop-zone {
-  position: absolute;
-  box-sizing: border-box;
-  border-radius: 1px;
-  min-height: 10px;
-  min-width: 10px;
-}
-
-.principal-view[dragging] .drop-zone:not([empty-layout]) {
-  outline: 1px dashed var(--cv-dropzone-border-color);
-  outline-offset: -2px;
-  background-color: var(--cv-dropzone-bg-color);
-}
-
-.principal-view .drop-zone[remaining-space] {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--cv-stripe-color),
-    var(--cv-stripe-color) var(--cv-stripe-width),
-    transparent var(--cv-stripe-width),
-    transparent var(--cv-stripe-gap)
-  );
-}
-
-.principal-view[dragging] .drop-zone[drag-over] {
-  background: var(--cv-droptarget-bg-color);
-  outline: 1px solid var(--cv-droptarget-border-color);
-  outline-offset: -1px;
-  box-shadow: inset 0 0 0 2px var(--lumo-base-color);
-}
-
-.drop-zone[empty-layout] {
-  z-index: -1;
-}
-
-.principal-view:not([readonly]) .layout[empty],
-vaadin-form-layout[empty] {
-  border-radius: 1px;
-  background: repeating-conic-gradient(var(--cv-checkerboard-color1) 0% 25%, var(--cv-checkerboard-color2) 0% 50%) 50% /
-    var(--cv-checkerboard-size) var(--cv-checkerboard-size);
-  background-clip: content-box;
-  outline: 1px dashed var(--cv-layout-border-color);
-  outline-offset: -2px;
-}
-.principal-view[dragging]:not([readonly]) vaadin-form-layout[empty] {
-  background: transparent;
-}
-
-.principal-view .layout[empty]::before {
-  content: '';
+.pagos_section .section_etiqueta {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dess-verde-suave);
   display: block;
-  min-width: 64px;
-  min-height: 32px;
+  margin-bottom: 8px;
 }
 
-.principal-view[readonly] .drop-zones,
-.principal-view[readonly] .overlays {
-  display: none;
+.pagos_section .section_titulo,
+.pagos_section h2.section_titulo {
+  color: var(--dess-verde-oscuro);
+  font-size: 28px;
+  font-weight: 300;
+  margin: 0;
 }
 
-.principal-view[inline-editing] .drop-zones,
-.principal-view[inline-editing] .overlays {
-  display: none;
+/* ── Layout de dos columnas ── */
+.pagos_section .pagos_columnas {
+  padding: 32px 48px 48px 48px;
+  gap: 24px;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
 }
-.principal-view .content-wrapper[contenteditable='true'] {
+
+/* ── Formulario de pago ── */
+.pagos_section .pagos_formulario {
+  flex: 1;
+  background: var(--dess-blanco);
+  border: 1px solid var(--dess-borde);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pagos_section .pagos_formulario .form_titulo,
+.pagos_section .pagos_formulario h3.form_titulo {
+  color: var(--dess-verde-oscuro);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.pagos_section .campo_full {
+  width: 100%;
+}
+
+.pagos_section .btn_primario_verde,
+.pagos_section vaadin-button.btn_primario_verde {
+  background: var(--dess-verde-oscuro);
+  color: var(--dess-blanco);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+/* ── Panel historial ── */
+.pagos_section .pagos_historial {
+  flex: 1;
+  background: var(--dess-blanco);
+  border: 1px solid var(--dess-borde);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.pagos_section .pagos_historial .form_titulo,
+.pagos_section .pagos_historial h3.form_titulo {
+  color: var(--dess-verde-oscuro);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+/* ── Filas del historial ── */
+.pagos_section .historial_fila {
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f7f5;
+  gap: 12px;
+}
+
+.pagos_section .punto_verde {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dess-verde);
+  flex-shrink: 0;
   display: inline-block;
-  overflow: hidden;
-  width: 100%;
 }
 
-.principal-view[dragging] vaadin-form-layout {
-  padding: 8px;
-}
-.principal-view vaadin-form-layout[empty]::before {
-  content: '';
-  display: block;
-  min-width: 64px;
-  min-height: 32px;
+.pagos_section .punto_gris {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dess-verde-claro);
+  flex-shrink: 0;
+  display: inline-block;
 }
 
-.principal-view[dragging] vaadin-form-layout:not([empty])::after {
-  content: '';
+.pagos_section .historial_nombre {
+  font-size: 14px;
+  color: var(--dess-verde-oscuro);
+  font-weight: 500;
   display: block;
-  min-width: 64px;
-  min-height: 32px;
+}
+
+.pagos_section .historial_fecha {
+  font-size: 12px;
+  color: var(--dess-texto-suave);
+  display: block;
+}
+
+.pagos_section .historial_monto {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dess-verde-oscuro);
+  white-space: nowrap;
 }
