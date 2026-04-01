@@ -1,153 +1,206 @@
 package com.example.application.views.principal;
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.Icon;
+import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.*;
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class CreditosSection extends VerticalLayout {
 
-    private List<String> creditos = new ArrayList<>();
-    private Grid<String> grid = new Grid<>();
+        public static class SolicitudCredito {
+                private String cliente, tipo, monto, estado;
 
-    public CreditosSection() {
+                public SolicitudCredito(String cliente, String tipo, String monto, String estado) {
+                        this.cliente = cliente;
+                        this.tipo = tipo;
+                        this.monto = monto;
+                        this.estado = estado;
+                }
 
-        setWidth("100%");
-        setPadding(true);
-        setSpacing(true);
-        setAlignItems(Alignment.CENTER);
+                public String getCliente() {
+                        return cliente;
+                }
 
-        // 🎨 Fondo general
-        getStyle().set("background", "#8FC1B5");
+                public String getTipo() {
+                        return tipo;
+                }
 
-        // 🔹 TÍTULO
-        H2 titulo = new H2("Créditos");
+                public String getMonto() {
+                        return monto;
+                }
 
-        // 🔹 TARJETAS
-        Div personal = crearTarjeta(
-                "Crédito Personal",
-                "Para gastos personales y libres."
-        );
+                public String getEstado() {
+                        return estado;
+                }
+        }
 
-        Div hipotecario = crearTarjeta(
-                "Crédito Hipotecario",
-                "Para compra de vivienda."
-        );
+        private List<SolicitudCredito> solicitudes = new ArrayList<>();
+        private Grid<SolicitudCredito> grid = new Grid<>(SolicitudCredito.class, false);
 
-        Div vehicular = crearTarjeta(
-                "Crédito Vehicular",
-                "Para compra de vehículos."
-        );
+        public CreditosSection() {
 
-        HorizontalLayout tarjetas = new HorizontalLayout(personal, hipotecario, vehicular);
-        tarjetas.setSpacing(true);
+                configurarLayout();
 
-        // 🔹 FORMULARIO
-        H2 subtitulo = new H2("Solicitar Crédito");
+                H2 titulo = crearTitulo();
+                HorizontalLayout tarjetas = crearTarjetas();
 
-        TextField nombre = new TextField("Nombre del cliente");
-        TextField cedula = new TextField("Cédula");
+                Span textoBanner = new Span("Tipo seleccionado: Vehicular");
+                HorizontalLayout banner = crearBanner(textoBanner);
 
-        ComboBox<String> tipoCredito = new ComboBox<>("Tipo de crédito");
-        tipoCredito.setItems("Personal", "Hipotecario", "Vehicular");
+                VerticalLayout formulario = crearFormulario(textoBanner);
+                Div tabla = crearTabla();
 
-        NumberField monto = new NumberField("Monto solicitado");
+                add(titulo, tarjetas, banner, formulario, tabla);
+        }
 
-        Button solicitar = new Button("Solicitar");
+        private void configurarLayout() {
+                setWidthFull();
+                setPadding(true);
+                setSpacing(true);
+                setAlignItems(Alignment.CENTER);
 
-        // 🎨 Botón estilo banco
-        solicitar.getStyle()
-                .set("background", "#007566")
-                .set("color", "white")
-                .set("border-radius", "10px");
+                addClassName("view-background");
+        }
 
-        solicitar.addClickListener(e -> {
+        private H2 crearTitulo() {
+                H2 titulo = new H2("Mis Créditos Bancarios");
+                titulo.addClassName("title");
+                return titulo;
+        }
 
-            String credito = nombre.getValue() + " - " + tipoCredito.getValue();
+        private HorizontalLayout crearTarjetas() {
 
-            creditos.add(credito);
-            grid.setItems(creditos);
+                Div t1 = crearTarjeta("Activo", "$5.000.000", "Crédito Personal", "Cuota", "$312.500", true);
+                Div t2 = crearTarjeta("Disponible", "$15.000.000", "Libre Inversión", "Tasa", "1.5% MV", false);
 
-            Notification.show("Crédito solicitado correctamente");
+                HorizontalLayout layout = new HorizontalLayout(t1, t2);
+                layout.setSpacing(true);
+                layout.setJustifyContentMode(JustifyContentMode.CENTER);
 
-            nombre.clear();
-            cedula.clear();
-            monto.clear();
-            tipoCredito.clear();
-        });
+                return layout;
+        }
 
-        FormLayout form = new FormLayout();
-        form.add(nombre, cedula, tipoCredito, monto, solicitar);
+        private Div crearTarjeta(String estado, String monto, String titulo,
+                        String d1, String v1, boolean destacada) {
 
-        form.setMaxWidth("600px");
-        form.getStyle()
-                .set("background", "white")
-                .set("padding", "25px")
-                .set("border-radius", "15px")
-                .set("box-shadow", "0 6px 15px rgba(0,0,0,0.1)")
-                .set("border-top", "5px solid #265C4B")
-                .set("margin", "20px auto");
+                Span badge = new Span(estado);
+                badge.addClassName("badge");
 
-        // 🔹 GRID
-        grid.addColumn(c -> c).setHeader("Solicitudes de crédito");
-        grid.setWidth("600px");
+                H3 montoTxt = new H3(monto);
 
-        Div gridContainer = new Div(grid);
-        gridContainer.setWidth("600px");
-        gridContainer.getStyle()
-                .set("background", "white")
-                .set("padding", "20px")
-                .set("border-radius", "15px")
-                .set("box-shadow", "0 6px 15px rgba(0,0,0,0.1)")
-                .set("border-top", "5px solid #007566")
-                .set("margin", "20px auto");
+                Paragraph subtitulo = new Paragraph(titulo);
 
-        // 🔹 AGREGAR TODO
-        add(titulo, tarjetas, subtitulo, form, gridContainer);
-    }
+                HorizontalLayout fila = new HorizontalLayout(new Span(d1), new Span(v1));
+                fila.setWidthFull();
+                fila.setJustifyContentMode(JustifyContentMode.BETWEEN);
 
-    // 🔥 TARJETAS ESTILO PRO (créditos con variante de color)
-    private Div crearTarjeta(String titulo, String descripcion) {
+                Div card = new Div(badge, montoTxt, subtitulo, fila);
 
-        H2 tituloCredito = new H2(titulo);
-        Paragraph desc = new Paragraph(descripcion);
+                card.addClassName("card");
 
-        Div card = new Div(tituloCredito, desc);
+                if (destacada) {
+                        card.addClassName("card-highlight");
+                }
 
-        card.getStyle()
-                .set("border-radius", "15px")
-                .set("padding", "20px")
-                .set("width", "260px")
-                .set("background", "linear-gradient(135deg, #007566, #589A8D)")
-                .set("color", "white")
-                .set("box-shadow", "0 6px 15px rgba(0,0,0,0.2)")
-                .set("cursor", "pointer")
-                .set("transition", "0.3s");
+                return card;
+        }
 
-        // ✨ Hover
-        card.getElement().addEventListener("mouseover", e ->
-                card.getStyle().set("transform", "scale(1.05)")
-        );
+        private HorizontalLayout crearBanner(Span textoBanner) {
 
-        card.getElement().addEventListener("mouseout", e ->
-                card.getStyle().set("transform", "scale(1)")
-        );
+                Icon icon = VaadinIcon.ARROW_DOWN.create();
 
-        card.addClickListener(e -> {
-            Notification.show("Seleccionaste: " + titulo);
-        });
+                HorizontalLayout banner = new HorizontalLayout(icon, textoBanner);
+                banner.addClassName("banner");
 
-        return card;
-    }
+                banner.setAlignItems(Alignment.CENTER);
+
+                return banner;
+        }
+
+        private VerticalLayout crearFormulario(Span textoBanner) {
+
+                H3 titulo = new H3("Solicitar crédito");
+                titulo.addClassName("subtitle");
+
+                TextField nombre = new TextField("Nombre");
+                TextField cedula = new TextField("Cédula");
+
+                ComboBox<String> tipo = new ComboBox<>("Tipo");
+                tipo.setItems("Vehicular", "Personal", "Hipotecario");
+                tipo.setValue("Vehicular");
+
+                tipo.addValueChangeListener(event -> {
+                        if (event.getValue() != null) {
+                                textoBanner.setText("Tipo seleccionado: " + event.getValue());
+                        }
+                });
+
+                NumberField monto = new NumberField("Monto");
+
+                TextField plazo = new TextField("Plazo");
+                TextField cuota = new TextField("Cuota estimada");
+                cuota.setReadOnly(true);
+
+                Button btn = new Button("Solicitar crédito");
+                btn.setWidthFull();
+                btn.addClassName("btn-main");
+
+                btn.addClickListener(e -> {
+
+                        if (!nombre.isEmpty()) {
+                                solicitudes.add(new SolicitudCredito(
+                                                nombre.getValue(),
+                                                tipo.getValue(),
+                                                "$" + monto.getValue(),
+                                                "Pendiente"));
+
+                                grid.setItems(solicitudes);
+
+                                Notification.show("Solicitud enviada");
+
+                                nombre.clear();
+                                cedula.clear();
+                                monto.clear();
+                                plazo.clear();
+                        }
+                });
+
+                FormLayout form = new FormLayout();
+                form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
+                form.add(nombre, cedula, tipo, monto, plazo, cuota);
+
+                VerticalLayout container = new VerticalLayout(titulo, form, btn);
+                container.addClassName("box");
+
+                return container;
+        }
+
+        private Div crearTabla() {
+
+                grid.addColumn(SolicitudCredito::getCliente).setHeader("CLIENTE");
+                grid.addColumn(SolicitudCredito::getTipo).setHeader("TIPO");
+                grid.addColumn(SolicitudCredito::getMonto).setHeader("MONTO");
+                grid.addColumn(SolicitudCredito::getEstado).setHeader("ESTADO");
+
+                grid.setAllRowsVisible(true);
+
+                H3 titulo = new H3("Solicitudes registradas");
+                titulo.addClassName("subtitle");
+
+                Div container = new Div(titulo, grid);
+                container.addClassName("grid-box");
+
+                return container;
+
+        }
 }

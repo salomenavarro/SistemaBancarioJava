@@ -1,148 +1,148 @@
 package com.example.application.views.principal;
 
-import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
-import com.vaadin.flow.component.textfield.NumberField;
-import com.vaadin.flow.component.textfield.TextField;
-import com.vaadin.flow.component.html.H2;
-import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
-import com.vaadin.flow.component.html.Div;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.notification.Notification;
-import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.orderedlayout.*;
+
+import com.vaadin.flow.component.textfield.NumberField;
+import com.vaadin.flow.component.textfield.TextField;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TiposDeCuentasSection extends VerticalLayout {
 
-    private List<String> cuentas = new ArrayList<>();
-    private Grid<String> grid = new Grid<>();
+        private List<String> cuentas = new ArrayList<>();
+        private Grid<String> grid = new Grid<>();
 
-    public TiposDeCuentasSection() {
+        public TiposDeCuentasSection() {
 
-        setWidth("100%");
-        setPadding(true);
-        setSpacing(true);
-        setAlignItems(Alignment.CENTER);
+                configurarLayout();
 
-        // 🎨 Fondo general
-        getStyle().set("background", "#8FC1B5");
+                H2 titulo = crearTitulo();
+                HorizontalLayout tarjetas = crearTarjetas();
+                VerticalLayout formulario = crearFormulario();
+                Div tabla = crearTabla();
 
-        // 🔹 TÍTULO
-        H2 titulo = new H2("Tipos de Cuentas");
+                add(titulo, tarjetas, formulario, tabla);
+        }
 
-        // 🔹 TARJETAS
-        Div ahorro = crearTarjeta(
-                "Cuenta de Ahorros",
-                "Ideal para guardar dinero y generar intereses."
-        );
+        private void configurarLayout() {
+                setWidthFull();
+                setPadding(true);
+                setSpacing(true);
+                setAlignItems(Alignment.CENTER);
 
-        Div corriente = crearTarjeta(
-                "Cuenta Corriente",
-                "Permite movimientos frecuentes sin restricciones."
-        );
+                addClassName("view-background");
+        }
 
-        HorizontalLayout contenedor = new HorizontalLayout(ahorro, corriente);
-        contenedor.setSpacing(true);
+        private H2 crearTitulo() {
+                H2 titulo = new H2("Tipos de Cuentas");
+                titulo.addClassName("title");
+                return titulo;
+        }
 
-        // 🔹 FORMULARIO
-        H2 subtitulo = new H2("Crear Cuenta");
+        private HorizontalLayout crearTarjetas() {
 
-        TextField nombre = new TextField("Nombre del cliente");
-        TextField cedula = new TextField("Cédula");
+                // me dio pereza poner los iconos, espero entiendas la tragedia, boss. 
 
-        ComboBox<String> tipoCuenta = new ComboBox<>("Tipo de cuenta");
-        tipoCuenta.setItems("Ahorros", "Corriente");
+                Div ahorro = crearTarjeta(
+                                "Cuenta de Ahorros",
+                                "Guarda tu dinero y genera intereses.",
+                                "3% interés anual");
 
-        NumberField saldo = new NumberField("Saldo inicial");
+                Div corriente = crearTarjeta(
+                                "Cuenta Corriente",
+                                "Manejo diario con sobregiro.",
+                                "Uso frecuente");
 
-        Button crear = new Button("Crear cuenta");
+                Div premium = crearTarjeta(
+                                "Cuenta Premium",
+                                "Beneficios exclusivos y atención prioritaria.",
+                                "Sin restricciones");
 
-        // 🎨 Botón estilo banco
-        crear.getStyle()
-                .set("background", "#007566")
-                .set("color", "white")
-                .set("border-radius", "10px");
+                HorizontalLayout layout = new HorizontalLayout(ahorro, corriente, premium);
+                layout.setSpacing(true);
+                layout.setJustifyContentMode(JustifyContentMode.CENTER);
 
-        crear.addClickListener(e -> {
+                return layout;
+        }
 
-            String cuenta = nombre.getValue() + " - " + tipoCuenta.getValue();
+        private Div crearTarjeta(String titulo, String descripcion, String dato) {
 
-            cuentas.add(cuenta);
-            grid.setItems(cuentas);
+                Span badge = new Span(dato);
+                badge.addClassName("badge");
 
-            Notification.show("Cuenta creada correctamente");
+                H3 tituloTxt = new H3(titulo);
+                Paragraph desc = new Paragraph(descripcion);
 
-            nombre.clear();
-            cedula.clear();
-            saldo.clear();
-            tipoCuenta.clear();
-        });
+                Div card = new Div(tituloTxt, desc, badge);
 
-        FormLayout form = new FormLayout();
-        form.add(nombre, cedula, tipoCuenta, saldo, crear);
+                card.addClassName("card");
+                card.addClassName("card-highlight");
 
-        form.setMaxWidth("600px");
-        form.getStyle()
-                .set("background", "white")
-                .set("padding", "25px")
-                .set("border-radius", "15px")
-                .set("box-shadow", "0 6px 15px rgba(0,0,0,0.1)")
-                .set("border-top", "5px solid #007566")
-                .set("margin", "20px auto");
+                card.addClickListener(e -> Notification.show("Seleccionaste: " + titulo));
 
-        // 🔹 GRID
-        grid.addColumn(c -> c).setHeader("Cuentas creadas");
-        grid.setWidth("600px");
+                return card;
+        }
 
-        Div gridContainer = new Div(grid);
-        gridContainer.setWidth("600px");
-        gridContainer.getStyle()
-                .set("background", "white")
-                .set("padding", "20px")
-                .set("border-radius", "15px")
-                .set("box-shadow", "0 6px 15px rgba(0,0,0,0.1)")
-                .set("border-top", "5px solid #146551")
-                .set("margin", "20px auto");
+        private VerticalLayout crearFormulario() {
 
-        // 🔹 AGREGAR TODO
-        add(titulo, contenedor, subtitulo, form, gridContainer);
-    }
+                H3 subtitulo = new H3("Crear Cuenta");
+                subtitulo.addClassName("subtitle");
 
-    // 🔥 TARJETAS ESTILO PRO
-    private Div crearTarjeta(String titulo, String descripcion) {
+                TextField nombre = new TextField("Nombre");
+                TextField cedula = new TextField("Cédula");
 
-        H2 tituloCuenta = new H2(titulo);
-        Paragraph desc = new Paragraph(descripcion);
+                ComboBox<String> tipoCuenta = new ComboBox<>("Tipo de cuenta");
+                tipoCuenta.setItems("Ahorros", "Corriente", "Premium");
 
-        Div card = new Div(tituloCuenta, desc);
+                NumberField saldo = new NumberField("Saldo inicial");
 
-        card.getStyle()
-                .set("border-radius", "15px")
-                .set("padding", "20px")
-                .set("width", "260px")
-                .set("background", "linear-gradient(135deg, #265C4B, #146551)")
-                .set("color", "white")
-                .set("box-shadow", "0 6px 15px rgba(0,0,0,0.2)")
-                .set("cursor", "pointer")
-                .set("transition", "0.3s");
+                Button crear = new Button("Crear cuenta");
+                crear.setWidthFull();
+                crear.addClassName("btn-main");
 
-        // ✨ Hover efecto
-        card.getElement().addEventListener("mouseover", e ->
-                card.getStyle().set("transform", "scale(1.05)")
-        );
+                crear.addClickListener(e -> {
 
-        card.getElement().addEventListener("mouseout", e ->
-                card.getStyle().set("transform", "scale(1)")
-        );
+                        String cuenta = nombre.getValue() + " - " + tipoCuenta.getValue();
 
-        card.addClickListener(e -> {
-            Notification.show("Seleccionaste: " + titulo);
-        });
+                        cuentas.add(cuenta);
+                        grid.setItems(cuentas);
 
-        return card;
-    }
+                        Notification.show("Cuenta creada correctamente");
+
+                        nombre.clear();
+                        cedula.clear();
+                        saldo.clear();
+                        tipoCuenta.clear();
+                });
+
+                FormLayout form = new FormLayout();
+                form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 2));
+                form.add(nombre, cedula, tipoCuenta, saldo);
+
+                VerticalLayout container = new VerticalLayout(subtitulo, form, crear);
+                container.addClassName("box");
+
+                return container;
+        }
+
+        private Div crearTabla() {
+
+                grid.addColumn(c -> c).setHeader("Cuentas creadas");
+                grid.setAllRowsVisible(true);
+
+                H3 tituloTabla = new H3("Registros");
+                tituloTabla.addClassName("subtitle");
+
+                Div container = new Div(tituloTabla, grid);
+                container.addClassName("grid-box");
+
+                return container;
+        }
 }
