@@ -93,3 +93,170 @@
     color: var(--main);
 }
 
+/* ══════════════════════════════════════════════════════════════════════════════
+   HERO SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.hero_section {
+  background: linear-gradient(135deg, #265C4B 0%, #146551 60%, #007566 100%);
+  width: 100%;
+}
+
+.hero_section .hero_contenedor {
+  padding: 56px 48px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+  gap: 48px;
+}
+
+/* Lado izquierdo — flex:1 para que ocupe el espacio disponible */
+.hero_section .hero_contenido_izquierdo {
+  flex: 1;
+  gap: 0;
+}
+
+.hero_section .hero_etiqueta {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dess-verde-claro);
+  display: block;
+  margin-bottom: 12px;
+}
+
+/* Especificidad alta (.hero_section h1) para vencer los estilos por defecto de Vaadin */
+.hero_section .hero_titulo,
+.hero_section h1.hero_titulo {
+  font-family: var(--dess-fuente-principal);
+  color: var(--dess-blanco);
+  font-size: 48px;
+  line-height: 1.2;
+  margin: 0 0 16px 0;
+  font-weight: 700;
+}
+
+.hero_section .hero_descripcion,
+.hero_section p.hero_descripcion {
+  color: var(--dess-verde-claro);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 28px 0;
+  max-width: 440px;
+}
+
+/* ── Botones del hero ── */
+.hero_section .hero_botones {
+  margin-bottom: 24px;
+  gap: 12px;
+}
+
+/* Vaadin aplica estilos a vaadin-button — los pisamos con el padre .hero_section */
+.hero_section .btn_primario,
+.hero_section vaadin-button.btn_primario {
+  background: var(--dess-blanco);
+  color: var(--dess-verde-oscuro);
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.hero_section .btn_secundario,
+.hero_section vaadin-button.btn_secundario {
+  background: transparent;
+  color: var(--dess-blanco);
+  border: 1.5px solid rgba(255, 255, 255, 0.4);
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+/* ── Chips (accesos rápidos) ── */
+.hero_section .chip_acceso_rapido {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.hero_section .hero_chip {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--dess-verde-claro);
+  font-size: 13px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.hero_section .hero_chip:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--dess-blanco);
+}
+
+/* ── Tarjeta bancaria ── */
+.hero_section .hero_tarjeta {
+  background: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.20);
+  border-radius: 16px;
+  padding: 28px;
+  min-width: 280px;
+  max-width: 340px;
+  flex-shrink: 0;
+}
+
+.hero_section .hero_tarjeta .tarjeta_label,
+.hero_section .hero_tarjeta p.tarjeta_label {
+  color: var(--dess-verde-claro);
+  font-size: 12px;
+  margin: 0 0 4px 0;
+}
+
+.hero_section .hero_tarjeta .tarjeta_nombre,
+.hero_section .hero_tarjeta p.tarjeta_nombre {
+  color: var(--dess-blanco);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 20px 0;
+}
+
+.hero_section .hero_tarjeta .tarjeta_saldo_label,
+.hero_section .hero_tarjeta p.tarjeta_saldo_label {
+  color: var(--dess-verde-claro);
+  font-size: 11px;
+  margin: 0 0 4px 0;
+}
+
+/* h2 dentro de la tarjeta — doble selector para ganar a Vaadin */
+.hero_section .hero_tarjeta .tarjeta_saldo,
+.hero_section .hero_tarjeta h2.tarjeta_saldo {
+  color: var(--dess-blanco);
+  font-size: 30px;
+  margin: 0 0 20px 0;
+  font-weight: 300;
+}
+
+.hero_section .hero_tarjeta .tarjeta_fila_info {
+  gap: 24px;
+}
+
+.hero_section .hero_tarjeta .tarjeta_item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hero_section .hero_tarjeta .tarjeta_item_label {
+  color: var(--dess-verde-claro);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.hero_section .hero_tarjeta .tarjeta_item_valor {
+  color: var(--dess-blanco);
+  font-size: 14px;
+}
