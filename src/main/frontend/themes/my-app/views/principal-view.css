@@ -1,0 +1,243 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   DESS — Estilos 
+   Archivo: src/main/frontend/themes/my-app/views/principal-view.css
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+/* ── VARIABLES GLOBALES ──────────────────────────────────────────────────── */
+:root {
+  --dess-verde-oscuro:       #265C4B;
+  --dess-verde-medio:        #146551;
+  --dess-verde:              #007566;
+  --dess-verde-suave:        #589A8D;
+  --dess-verde-claro:        #8FC1B5;
+  --dess-blanco:             #FFFFFF;
+  --dess-fondo:              #f7faf9;
+  --dess-borde:              #e0eeeb;
+  --dess-texto-suave:        #589A8D;
+  --dess-fuente-principal:   'Playfair Display', serif;
+}
+
+
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   PAGOS SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.pagos_section {
+  background: var(--dess-blanco);
+  width: 100%;
+}
+
+/* ── Encabezado reutilizable — también sirve para las secciones del equipo ── */
+.pagos_section .section_encabezado {
+  padding: 48px 48px 0 48px;
+}
+
+.pagos_section .section_etiqueta {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--dess-verde-suave);
+  display: block;
+  margin-bottom: 8px;
+}
+
+.pagos_section .section_titulo,
+.pagos_section h2.section_titulo {
+  color: var(--dess-verde-oscuro);
+  font-size: 28px;
+  font-weight: 300;
+  margin: 0;
+}
+
+/* ── Layout de dos columnas ── */
+.pagos_section .pagos_columnas {
+  padding: 32px 48px 48px 48px;
+  gap: 24px;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Formulario de pago ── */
+.pagos_section .pagos_formulario {
+  flex: 1;
+  background: var(--dess-blanco);
+  border: 1px solid var(--dess-borde);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pagos_section .pagos_formulario .form_titulo,
+.pagos_section .pagos_formulario h3.form_titulo {
+  color: var(--dess-verde-oscuro);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.pagos_section .campo_full {
+  width: 100%;
+}
+
+.pagos_section .btn_primario_verde,
+.pagos_section vaadin-button.btn_primario_verde {
+  background: var(--dess-verde-oscuro);
+  color: var(--dess-blanco);
+  border: none;
+  border-radius: 8px;
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+/* ── Panel historial ── */
+.pagos_section .pagos_historial {
+  flex: 1;
+  background: var(--dess-blanco);
+  border: 1px solid var(--dess-borde);
+  border-radius: 14px;
+  padding: 28px;
+}
+
+.pagos_section .pagos_historial .form_titulo,
+.pagos_section .pagos_historial h3.form_titulo {
+  color: var(--dess-verde-oscuro);
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+/* ── Filas del historial ── */
+.pagos_section .historial_fila {
+  width: 100%;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f7f5;
+  gap: 12px;
+}
+
+.pagos_section .punto_verde {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dess-verde);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.pagos_section .punto_gris {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--dess-verde-claro);
+  flex-shrink: 0;
+  display: inline-block;
+}
+
+.pagos_section .historial_nombre {
+  font-size: 14px;
+  color: var(--dess-verde-oscuro);
+  font-weight: 500;
+  display: block;
+}
+
+.pagos_section .historial_fecha {
+  font-size: 12px;
+  color: var(--dess-texto-suave);
+  display: block;
+}
+
+.pagos_section .historial_monto {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--dess-verde-oscuro);
+  white-space: nowrap;
+}
+
+/* Contenedor con fondo suave */
+.user-section-container {
+    background-color: #f0f4f3;
+    min-height: 100vh;
+    padding: 40px 20px;
+}
+
+/* Tarjeta Bancaria Verde */
+.bank-card-visual {
+    background: linear-gradient(135deg, #265C4B 0%, #007566 100%);
+    border-radius: 20px;
+    padding: 25px;
+    color: white;
+    box-shadow: 0 12px 24px rgba(38, 92, 75, 0.4);
+    margin-bottom: 30px;
+    height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-chip {
+    width: 45px;
+    height: 35px;
+    background: linear-gradient(135deg, #f0d78c 0%, #d4af37 100%);
+    border-radius: 8px;
+}
+
+.card-number {
+    font-family: 'Courier New', monospace;
+    font-size: 1.5em;
+    letter-spacing: 3px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+}
+
+/* Panel de Información Blanco */
+.info-card {
+    background: white;
+    border-radius: 24px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* Separador sutil */
+hr {
+    border: 0;
+    border-top: 1px solid #8FC1B5;
+    width: 100%;
+    margin: 15px 0;
+}
+
+/* Estilo para los Details (Desplegables) */
+vaadin-details {
+    width: 100%;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+vaadin-details [slot="summary"] {
+    color: #146551;
+    font-weight: 600;
+}
+
+/* Botón de Acción Principal */
+.action-button {
+    background-color: #007566 !important;
+    color: white !important;
+    border-radius: 14px !important;
+    height: 55px !important;
+    font-weight: bold !important;
+    margin-top: 25px !important;
+    box-shadow: 0 4px 12px rgba(0, 117, 102, 0.3) !important;
+    cursor: pointer;
+}
+
+.action-button:hover {
+    background-color: #146551 !important;
+    transform: translateY(-2px);
+}
