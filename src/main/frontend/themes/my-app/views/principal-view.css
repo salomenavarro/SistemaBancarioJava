@@ -161,6 +161,7 @@
   font-weight: 500;
   color: var(--dess-verde-oscuro);
   white-space: nowrap;
+<<<<<<< HEAD
 }
 
 /* Contenedor con fondo suave */
@@ -240,4 +241,6 @@ vaadin-details [slot="summary"] {
 .action-button:hover {
     background-color: #146551 !important;
     transform: translateY(-2px);
+=======
+>>>>>>> a6fd35cf9f6f1965fa9bd1696ed68cf05159f064
 }

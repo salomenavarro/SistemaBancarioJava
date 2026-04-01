@@ -1,2 +1,98 @@
 @import url('./main-layout.css');
+<<<<<<< HEAD
 @import url('./views/principal-view.css');
+=======
+@import url('./views/principal-view.css');
+
+:root {
+    --dark: #265C4B;
+    --primary: #146551;
+    --main: #007566;
+    --soft: #589A8D;
+    --light: #8FC1B5;
+
+    --bg: #F4F7F6;
+    --white: #FFFFFF;
+}
+
+.view-background {
+    background-color: var(--bg);
+}
+
+
+.card {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 15px;
+    width: 260px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.03);
+}
+
+.card-highlight {
+    border-left: 5px solid var(--main);
+}
+
+
+.badge {
+    background: var(--light);
+    color: var(--dark);
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-size: 12px;
+}
+
+
+.box {
+    background: var(--white);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 850px;
+    width: 100%;
+}
+
+.btn-main {
+    background: var(--main);
+    color: white;
+    border-radius: 10px;
+    height: 45px;
+    font-weight: bold;
+    border: none;
+}
+
+.btn-main:hover {
+    background: var(--primary);
+    cursor: pointer;
+}
+
+.banner {
+    background: #E8F5F2;
+    border-radius: 10px;
+    padding: 10px 20px;
+    color: var(--dark);
+    font-weight: 600;
+    max-width: 850px;
+    width: 100%;
+}
+
+.grid-box {
+    background: var(--white);
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    max-width: 850px;
+    width: 100%;
+}
+.title {
+    color: var(--dark);
+}
+
+.subtitle {
+    color: var(--main);
+}
+>>>>>>> a6fd35cf9f6f1965fa9bd1696ed68cf05159f064
