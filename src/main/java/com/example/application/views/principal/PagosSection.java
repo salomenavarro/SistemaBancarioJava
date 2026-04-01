@@ -4,18 +4,12 @@ package com.example.application.views.principal;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
-import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.html.Span;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;       // lista desplegable
 import com.vaadin.flow.component.textfield.TextField;     // campo de texto
-import com.vaadin.flow.component.notification.Notification; // mensaje emergente
-import com.vaadin.flow.component.notification.NotificationVariant;
 import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
- 
-import java.util.ArrayList;  // lista dinámica de Java (para el historial)
-import java.util.List;
  
 // ── CLASE ─────
 public class PagosSection extends VerticalLayout {
