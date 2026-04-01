@@ -1,7 +1,4 @@
 @import url('./main-layout.css');
-<<<<<<< HEAD
-@import url('./views/principal-view.css');
-=======
 @import url('./views/principal-view.css');
 
 :root {
@@ -95,4 +92,4 @@
 .subtitle {
     color: var(--main);
 }
->>>>>>> a6fd35cf9f6f1965fa9bd1696ed68cf05159f064
+
