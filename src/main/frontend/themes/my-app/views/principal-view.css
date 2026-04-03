@@ -161,7 +161,6 @@
   font-weight: 500;
   color: var(--dess-verde-oscuro);
   white-space: nowrap;
-<<<<<<< HEAD
 }
 
 /* Contenedor con fondo suave */
@@ -241,6 +240,120 @@ vaadin-details [slot="summary"] {
 .action-button:hover {
     background-color: #146551 !important;
     transform: translateY(-2px);
-=======
->>>>>>> a6fd35cf9f6f1965fa9bd1696ed68cf05159f064
+}
+
+:host {
+  
+    --green-dark: #265C4B;
+    --green-main: #007566;
+    --green-light: #8FC1B5;
+    --green-accent: #589A8D;
+    --white: #FFFFFF;
+    --bg-light: #F5F7F8;
+    --text-grey: #666666;
+}
+
+.titulo-seccion {
+    margin-top: 10px;
+    margin-bottom: 25px;
+    font-weight: 700;
+}
+
+
+.card-fintech {
+    background-color: var(--white);
+    border-radius: 20px; 
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.04); 
+    border: 1px solid rgba(0,0,0,0.03); 
+    transition: all 0.3s ease; 
+}
+
+.card-fintech:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(0, 117, 102, 0.08); 
+}
+
+.card-fintech h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+    font-size: 1.3rem;
+}
+
+
+.card-fintech vaadin-text-field {
+    border-radius: 12px;
+}
+.card-fintech vaadin-icon {
+    color: var(--green-accent);
+}
+
+
+vaadin-hr {
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    margin: 15px 0;
+}
+
+vaadin-button {
+    border-radius: 12px; 
+    font-weight: 600;
+}
+
+.btn-primario {
+    background-color: var(--green-dark);
+    color: var(--white);
+}
+
+.btn-secundario {
+    background-color: var(--green-light);
+    color: var(--green-dark);
+}
+
+.btn-peligro {
+    background-color: #ECEFF1;
+    color: #546E7A;
+}
+
+.toggle-switch::part(checkbox) {
+    width: 44px;
+    height: 24px;
+    border-radius: 12px;
+    border: 2px solid #D0D7DE;
+    background-color: #FFFFFF;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.toggle-switch[checked]::part(checkbox) {
+    background-color: var(--green-main); 
+    border-color: var(--green-main);
+}
+
+
+.toggle-switch::part(checkbox)::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #808080;
+    position: absolute;
+    top: 1px;
+    left: 1px;
+    transition: transform 0.2s, background-color 0.2s;
+}
+
+.toggle-switch[checked]::part(checkbox)::after {
+    transform: translateX(20px);
+    background-color: #FFFFFF; 
+}
+
+.toggle-switch::part(checkmark) {
+    display: none;
+}
+
+.info-estado {
+    color: var(--text-grey);
+    font-size: 0.9rem;
 }

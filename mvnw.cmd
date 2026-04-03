@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> ddc938f (Rediseño completo de la sección de perfil: tarjetas, toggles y estilos fintech)
 @REM ----------------------------------------------------------------------------
 @REM Licensed to the Apache Software Foundation (ASF) under one
 @REM or more contributor license agreements.  See the NOTICE file
@@ -143,12 +146,21 @@ if exist %WRAPPER_JAR% (
     )
 
     powershell -Command "&{"^
+<<<<<<< HEAD
 		"$webclient = new-object System.Net.WebClient;"^
 		"if (-not ([string]::IsNullOrEmpty('%MVNW_USERNAME%') -and [string]::IsNullOrEmpty('%MVNW_PASSWORD%'))) {"^
 		"$webclient.Credentials = new-object System.Net.NetworkCredential('%MVNW_USERNAME%', '%MVNW_PASSWORD%');"^
 		"}"^
 		"[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webclient.DownloadFile('%DOWNLOAD_URL%', '%WRAPPER_JAR%')"^
 		"}"
+=======
+        "$webclient = new-object System.Net.WebClient;"^
+        "if (-not ([string]::IsNullOrEmpty('%MVNW_USERNAME%') -and [string]::IsNullOrEmpty('%MVNW_PASSWORD%'))) {"^
+        "$webclient.Credentials = new-object System.Net.NetworkCredential('%MVNW_USERNAME%', '%MVNW_PASSWORD%');"^
+        "}"^
+        "[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; $webclient.DownloadFile('%DOWNLOAD_URL%', '%WRAPPER_JAR%')"^
+        "}"
+>>>>>>> ddc938f (Rediseño completo de la sección de perfil: tarjetas, toggles y estilos fintech)
     if "%MVNW_VERBOSE%" == "true" (
         echo Finished downloading %WRAPPER_JAR%
     )
@@ -186,6 +198,7 @@ if "%MAVEN_BATCH_PAUSE%"=="on" pause
 
 if "%MAVEN_TERMINATE_CMD%"=="on" exit %ERROR_CODE%
 
+<<<<<<< HEAD
 cmd /C exit /B %ERROR_CODE%
 =======
 @REM ----------------------------------------------------------------------------
@@ -377,3 +390,6 @@ if "%MAVEN_TERMINATE_CMD%"=="on" exit %ERROR_CODE%
 
 cmd /C exit /B %ERROR_CODE%
 >>>>>>> a6fd35cf9f6f1965fa9bd1696ed68cf05159f064
+=======
+cmd /C exit /B %ERROR_CODE%
+>>>>>>> ddc938f (Rediseño completo de la sección de perfil: tarjetas, toggles y estilos fintech)
