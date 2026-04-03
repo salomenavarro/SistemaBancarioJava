@@ -357,3 +357,172 @@ vaadin-button {
     color: var(--text-grey);
     font-size: 0.9rem;
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   TRANSFERENCIAS SECTION
+   ══════════════════════════════════════════════════════════════════════════ */
+
+.transferencias_section {
+  background: var(--dess-blanco);
+  width: 100%;
+}
+
+/* ── Columnas ── */
+.transferencias_section .transferencias_columnas {
+  padding: 32px 48px 48px 48px;
+  gap: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Formulario ── */
+.transferencias_section .transferencias_formulario {
+  flex: 1;
+  background: var(--dess-blanco);
+  border: 1px solid var(--dess-borde);
+  border-radius: 14px;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Fila banco + cuenta destino lado a lado */
+.transferencias_section .transferencias_fila {
+  gap: 12px;
+  width: 100%;
+}
+
+/* Campo de monto — más grande visualmente */
+.transferencias_section .campo_monto vaadin-number-field-light {
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--dess-verde-oscuro);
+}
+
+/* Mensaje de error */
+.transferencias_section .transferencias_error {
+  font-size: 13px;
+  color: #a32d2d;
+  background: #fce8e8;
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: block;
+}
+
+/* ── Panel de confirmación ── */
+.transferencias_section .transferencias_confirmacion {
+  background: var(--dess-fondo);
+  border: 1px solid var(--dess-borde);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.transferencias_section .transferencias_confirmacion .confirmacion_titulo,
+.transferencias_section .transferencias_confirmacion p.confirmacion_titulo {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--dess-verde-oscuro);
+  margin: 0 0 10px 0;
+}
+
+.transferencias_section .transferencias_confirmacion .confirmacion_fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+  border-bottom: 1px solid var(--dess-borde);
+}
+
+.transferencias_section .transferencias_confirmacion .confirmacion_label {
+  color: var(--dess-texto-suave);
+}
+
+.transferencias_section .transferencias_confirmacion .confirmacion_valor {
+  color: var(--dess-verde-oscuro);
+  font-weight: 500;
+}
+
+.transferencias_section .transferencias_confirmacion .confirmacion_botones {
+  margin-top: 12px;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Botón cancelar — diferente al primario */
+.transferencias_section .btn_cancelar,
+.transferencias_section vaadin-button.btn_cancelar {
+  background: transparent;
+  color: var(--dess-texto-suave);
+  border: 1px solid var(--dess-borde);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+/* ── Panel de recientes ── */
+.transferencias_section .transferencias_recientes {
+  flex: 1;
+  background: var(--dess-blanco);
+  border: 1px solid var(--dess-borde);
+  border-radius: 14px;
+  padding: 28px;
+  border-top: 4px solid var(--dess-verde-oscuro);
+}
+
+/* ── Items de la lista ── */
+.transferencias_section .transferencia_item {
+  width: 100%;
+  padding: 12px 0;
+  border-bottom: 1px solid #f0f7f5;
+  gap: 12px;
+}
+
+.transferencias_section .transferencia_avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--dess-fondo);
+  color: var(--dess-verde-oscuro);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 500;
+  flex-shrink: 0;
+  border: 1px solid var(--dess-borde);
+}
+
+.transferencias_section .transferencia_nombre {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dess-verde-oscuro);
+  display: block;
+}
+
+.transferencias_section .transferencia_banco {
+  font-size: 12px;
+  color: var(--dess-texto-suave);
+  display: block;
+}
+
+.transferencias_section .monto_salida {
+  font-size: 14px;
+  font-weight: 500;
+  color: #a32d2d;
+  display: block;
+}
+
+.transferencias_section .monto_entrada {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--dess-verde);
+  display: block;
+}
+
+.transferencias_section .transferencia_fecha {
+  font-size: 11px;
+  color: var(--dess-verde-claro);
+  display: block;
+}
