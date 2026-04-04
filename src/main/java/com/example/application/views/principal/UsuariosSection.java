@@ -1,87 +1,97 @@
 package com.example.application.views.principal;
 
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.Component;
-import com.vaadin.flow.component.html.*;
-import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.icon.VaadinIcon;
-import com.vaadin.flow.component.textfield.TextField;
+import com.vaadin.flow.component.button.ButtonVariant;
 import com.vaadin.flow.component.checkbox.Checkbox;
+import com.vaadin.flow.component.dialog.Dialog;
+import com.vaadin.flow.component.formlayout.FormLayout;
+import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.html.*;
+import com.vaadin.flow.component.icon.VaadinIcon;
+import com.vaadin.flow.component.notification.Notification;
+import com.vaadin.flow.component.notification.NotificationVariant;
+import com.vaadin.flow.component.orderedlayout.*;
 import com.vaadin.flow.component.select.Select;
+import com.vaadin.flow.component.textfield.PasswordField;
+import com.vaadin.flow.component.textfield.TextField;
+import com.example.application.modelo.Cliente;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class UsuariosSection extends VerticalLayout {
 
-    public UsuariosSection() {
-    
-        setSpacing(false);
-        setPadding(false);
-        setWidthFull();
-        getStyle().set("background-color", "#F5F7F8"); 
+    private Cliente cliente;
+    private TextField txtNombre = new TextField("Nombre completo");
+    private TextField txtEmail = new TextField("Correo electrónico");
+    private TextField txtCelular = new TextField("Número de celular");
+    private TextField txtDireccion = new TextField("Dirección de correspondencia");
 
-        VerticalLayout mainContent = new VerticalLayout();
-        mainContent.setWidthFull();
-        mainContent.setMaxWidth("900px"); 
-        mainContent.setPadding(true);
-        mainContent.setSpacing(true);
-        mainContent.setAlignItems(Alignment.CENTER);
+    public UsuariosSection() {
+   
+        cliente = new Cliente("Salome Navarro", "1020304050", "salomenavarro13@email.com", "+57 300 123 4534", "Calle 10 # 5-20, Medellín");
+        
+        setWidthFull();
+        setSpacing(true);
+        setAlignItems(Alignment.CENTER);
+        getStyle().set("background-color", "#F5F7F8");
 
         H2 tituloPage = new H2("Mi Perfil y Configuración");
-        tituloPage.addClassName("titulo-seccion");
-        tituloPage.getStyle().set("color", "#265C4B"); 
-        mainContent.add(tituloPage);
+        tituloPage.getStyle().set("color", "#265C4B");
+
+        VerticalLayout mainContent = new VerticalLayout();
+        mainContent.setMaxWidth("900px");
+        mainContent.setWidthFull();
+        mainContent.setSpacing(true);
 
         mainContent.add(createDatosPersonalesSection());
-        mainContent.add(createSeguridadSection());
+        mainContent.add(createSeguridadSection()); 
         mainContent.add(createCardControlSection());
+        mainContent.add(createHistorialSesionesSection());
 
-        add(mainContent);
-        setAlignItems(Alignment.CENTER);
+        add(tituloPage, mainContent);
     }
 
     private Component createDatosPersonalesSection() {
         VerticalLayout section = new VerticalLayout();
-        section.addClassName("card-fintech"); 
+        section.addClassName("card-fintech");
 
         H3 titulo = new H3("Datos Personales");
-        titulo.getStyle().set("color", "#146551"); 
+        titulo.getStyle().set("color", "#146551");
 
-        FormLayout form = new FormLayout();
-        form.setWidthFull();
+        txtNombre.setValue(cliente.getNombreCompleto());
+        txtNombre.setPrefixComponent(VaadinIcon.USER.create());
 
-        TextField txtNombre = new TextField("Nombre completo");
-        txtNombre.setValue("Juan Pérez Rodríguez");
-        txtNombre.setReadOnly(true); 
-        txtNombre.setSuffixComponent(VaadinIcon.EDIT.create()); 
+        txtEmail.setValue(cliente.getCorreoElectronico());
+        txtEmail.setPrefixComponent(VaadinIcon.ENVELOPE.create());
 
-        TextField txtEmail = new TextField("Correo electrónico");
-        txtEmail.setValue("usuario@email.com");
-        txtEmail.setReadOnly(true);
-
-        TextField txtCelular = new TextField("Número de celular");
-        txtCelular.setValue("+57 300 000 0000");
+        txtCelular.setValue(cliente.getNumeroCelular());
         txtCelular.setHelperText("Vinculado para transferencias");
-        txtCelular.setReadOnly(true);
 
-        TextField txtDireccion = new TextField("Dirección de correspondencia");
-        txtDireccion.setValue("Calle 10 # 5-20, Medellín");
+        txtDireccion.setValue(cliente.getDireccion());
         txtDireccion.setHelperText("Donde llegan las tarjetas físicas");
-        txtDireccion.setReadOnly(true);
 
-        form.add(txtNombre, txtEmail, txtCelular, txtDireccion);
+        FormLayout form = new FormLayout(txtNombre, txtEmail, txtCelular, txtDireccion);
+        form.setResponsiveSteps(new FormLayout.ResponsiveStep("0", 1), new FormLayout.ResponsiveStep("600px", 2));
+
+        Button btnGuardar = new Button("Guardar Cambios", VaadinIcon.CHECK.create());
+        btnGuardar.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
+        btnGuardar.getStyle().set("background-color", "#146551");
         
-        form.setResponsiveSteps(
-            new FormLayout.ResponsiveStep("0", 1),
-            new FormLayout.ResponsiveStep("600px", 2)
-        );
+        btnGuardar.addClickListener(e -> {
+         
+            cliente.setNombreCompleto(txtNombre.getValue());
+            cliente.setCorreoElectronico(txtEmail.getValue());
+            cliente.setNumeroCelular(txtCelular.getValue());
+            cliente.setDireccion(txtDireccion.getValue());
 
-        Button btnActualizar = new Button("Actualizar datos del contacto");
-        btnActualizar.addClassName("btn-primario"); 
-        btnActualizar.getStyle().set("margin-top", "15px");
+            Notification.show("Perfil actualizado: " + cliente.getResumen(true))
+                        .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+        });
 
-        section.add(titulo, form, btnActualizar);
-        section.setHorizontalComponentAlignment(Alignment.END, btnActualizar); 
-
+        section.add(titulo, form, btnGuardar);
+        section.setHorizontalComponentAlignment(Alignment.END, btnGuardar);
         return section;
     }
 
@@ -92,98 +102,92 @@ public class UsuariosSection extends VerticalLayout {
         H3 titulo = new H3("Seguridad");
         titulo.getStyle().set("color", "#146551");
 
-        HorizontalLayout biometriaLayout = new HorizontalLayout();
-        biometriaLayout.setWidthFull();
-        biometriaLayout.setAlignItems(Alignment.CENTER);
-        biometriaLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        Span info = new Span("Tu cuenta tiene una clave provisional activa. Te recomendamos actualizarla por seguridad.");
+        info.getStyle().set("font-size", "0.9em").set("color", "#D32F2F").set("font-weight", "500");
 
-        Span lblBiometria = new Span("Ingreso con Biometría (Huella/Rostro)");
-        lblBiometria.getStyle().set("font-weight", "500");
-        
-        Checkbox toggleBiometria = new Checkbox();
-        toggleBiometria.addClassName("toggle-switch"); 
+        Button btnPass = new Button("Cambiar Contraseña", VaadinIcon.KEY.create());
+        btnPass.addThemeVariants(ButtonVariant.LUMO_TERTIARY);
+        btnPass.getStyle().set("color", "#265C4B");
 
-        biometriaLayout.add(lblBiometria, toggleBiometria);
+        btnPass.addClickListener(e -> {
+            Dialog dialog = new Dialog();
+            dialog.setHeaderTitle("Actualizar Contraseña");
 
-        HorizontalLayout clavesLayout = new HorizontalLayout();
-        clavesLayout.setSpacing(true);
-        clavesLayout.getStyle().set("margin-top", "10px");
+            PasswordField pf1 = new PasswordField("Nueva Contraseña");
+            PasswordField pf2 = new PasswordField("Confirmar Contraseña");
+            VerticalLayout dialogLayout = new VerticalLayout(pf1, pf2);
+            
+            Button saveButton = new Button("Actualizar", event -> {
+                if(!pf1.getValue().isEmpty() && pf1.getValue().equals(pf2.getValue())) {
+                    Notification.show("Contraseña actualizada").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+                    dialog.close();
+                } else {
+                    Notification.show("Las contraseñas no coinciden").addThemeVariants(NotificationVariant.LUMO_ERROR);
+                }
+            });
 
-        Button btnCambiarPass = new Button("Cambiar contraseña de la App", VaadinIcon.KEY.create());
-        btnCambiarPass.addClassName("btn-secundario"); 
+            saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
+            
+            Button cancelButton = new Button("Cancelar", event -> dialog.close());
+            dialog.getFooter().add(cancelButton, saveButton);
+            dialog.add(dialogLayout);
+            dialog.open();
+        });
 
-        Button btnGestionarPin = new Button("Gestionar PIN del cajero", VaadinIcon.PASSWORD.create());
-        btnGestionarPin.addClassName("btn-secundario");
-
-        clavesLayout.add(btnCambiarPass, btnGestionarPin);
-
-        Div sesionesInfo = new Div();
-        sesionesInfo.addClassName("info-estado");
-        sesionesInfo.setText("Sesiones activas: 2 dispositivos (Este teléfono y Web)");
-        sesionesInfo.getStyle().set("margin-top", "15px");
-
-        Button btnCerrarSesion = new Button("Cerrar sesión", VaadinIcon.EXIT.create());
-        btnCerrarSesion.addClassName("btn-peligro"); 
-        btnCerrarSesion.getStyle().set("margin-top", "10px");
-
-        section.add(titulo, biometriaLayout, new Hr(), clavesLayout, sesionesInfo, btnCerrarSesion);
-        section.setHorizontalComponentAlignment(Alignment.START, btnCerrarSesion); 
-
+        section.add(titulo, info, btnPass);
         return section;
     }
 
     private Component createCardControlSection() {
         VerticalLayout section = new VerticalLayout();
         section.addClassName("card-fintech");
-        section.getStyle().set("border-left", "6px solid #589A8D"); 
+        section.getStyle().set("border-left", "6px solid #589A8D");
 
         H3 titulo = new H3("Gestión de Tarjeta");
         titulo.getStyle().set("color", "#146551");
 
-        HorizontalLayout bloqueoLayout = new HorizontalLayout();
-        bloqueoLayout.setWidthFull();
-        bloqueoLayout.setAlignItems(Alignment.CENTER);
-        bloqueoLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
+        Checkbox chkBloqueo = new Checkbox("Bloqueo temporal de tarjeta");
+        chkBloqueo.addValueChangeListener(event -> {
+            if (event.getValue()) {
+                Notification.show("¡TARJETA BLOQUEADA!", 3000, Notification.Position.MIDDLE)
+                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
+            } else {
+                Notification.show("Tarjeta reactivada").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            }
+        });
 
-        Span lblBloqueo = new Span("Bloqueo temporal de tarjeta");
-        lblBloqueo.getStyle().set("font-weight", "600").set("color", "#265C4B");
-        
-        Checkbox toggleBloqueo = new Checkbox();
-        toggleBloqueo.addClassName("toggle-switch");
+        Select<String> limite = new Select<>();
+        limite.setLabel("Límite diario de compras");
+        limite.setItems("$500.000", "$1.000.000", "$2.000.000");
+        limite.setValue("$1.000.000");
+        limite.addValueChangeListener(e -> Notification.show("Nuevo límite: " + e.getValue()));
 
-        bloqueoLayout.add(lblBloqueo, toggleBloqueo);
+        section.add(titulo, chkBloqueo, limite);
+        return section;
+    }
 
-        HorizontalLayout limiteLayout = new HorizontalLayout();
-        limiteLayout.setWidthFull();
-        limiteLayout.setAlignItems(Alignment.CENTER);
-        limiteLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
-        limiteLayout.getStyle().set("margin-top", "10px");
+    private Component createHistorialSesionesSection() {
+        VerticalLayout section = new VerticalLayout();
+        section.addClassName("card-fintech");
 
-        Span lblLimite = new Span("Límite diario de compras");
-        
-        Select<String> selectLimite = new Select<>();
-        selectLimite.setItems("$500.000", "$1.000.000", "$2.000.000", "$5.000.000 (Máx)");
-        selectLimite.setValue("$2.000.000"); 
-        selectLimite.setWidth("180px");
+        H3 titulo = new H3("Últimos Inicios de Sesión");
+        titulo.getStyle().set("color", "#146551");
 
-        limiteLayout.add(lblLimite, selectLimite);
+        record Sesion(String fecha, String dispositivo, String ubicacion) {}
 
-        HorizontalLayout internetLayout = new HorizontalLayout();
-        internetLayout.setWidthFull();
-        internetLayout.setAlignItems(Alignment.CENTER);
-        internetLayout.setJustifyContentMode(JustifyContentMode.BETWEEN);
-        internetLayout.getStyle().set("margin-top", "10px");
+        Grid<Sesion> grid = new Grid<>(Sesion.class, false);
+        grid.addColumn(Sesion::fecha).setHeader("Fecha y Hora");
+        grid.addColumn(Sesion::dispositivo).setHeader("Dispositivo");
+        grid.addColumn(Sesion::ubicacion).setHeader("Ubicación");
 
-        Span lblInternet = new Span("Compras por internet habilitadas");
-        
-        Checkbox toggleInternet = new Checkbox();
-        toggleInternet.addClassName("toggle-switch");
-        toggleInternet.setValue(true);
+        grid.setItems(Arrays.asList(
+            new Sesion("2026-04-04 01:45", "Chrome - Windows 11", "Medellín, ANT"),
+            new Sesion("2026-04-03 18:20", "App Móvil - iPhone 15", "Envigado, ANT"),
+            new Sesion("2026-01-15 09:12", "Edge - MacBook Pro", "Bogotá, DC")
+        ));
+        grid.setAllRowsVisible(true);
 
-        internetLayout.add(lblInternet, toggleInternet);
-
-        section.add(titulo, bloqueoLayout, new Hr(), limiteLayout, internetLayout);
-
+        section.add(titulo, grid);
         return section;
     }
 }
