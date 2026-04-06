@@ -28,10 +28,10 @@ public class UsuariosSection extends VerticalLayout {
     private TextField txtCelular = new TextField("Número de celular");
     private TextField txtDireccion = new TextField("Dirección de correspondencia");
 
-    public UsuariosSection() {
+    public UsuariosSection(Cliente cliente) {
    
-        cliente = new Cliente("Salome Navarro", "1020304050", "salomenavarro13@email.com", "+57 300 123 4534", "Calle 10 # 5-20, Medellín");
-        
+        this.cliente = cliente;
+
         setWidthFull();
         setSpacing(true);
         setAlignItems(Alignment.CENTER);
