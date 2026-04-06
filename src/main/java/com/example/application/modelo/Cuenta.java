@@ -18,6 +18,7 @@ public abstract class Cuenta implements Transaccionable {
         this.titular      = titular;
         this.saldo        = saldoInicial;
         this.tipo         = tipo;
+        
     }
 
     // Úsalo cuando la cuenta arranca sin dinero (saldo = 0).
