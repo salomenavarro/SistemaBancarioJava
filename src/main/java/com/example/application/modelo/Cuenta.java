@@ -3,14 +3,15 @@ package com.example.application.modelo;
 // Clase base de todas las cuentas del banco.
 // Es "abstract" porque nunca se crea sola — siempre es
 // CuentaAhorros, CuentaCorriente o CuentaPremium.
+// Emiliano: tus tres clases deben decir "extends Cuenta".
+
 public abstract class Cuenta implements Transaccionable {
 
-    // Atributos privados — nadie los toca directamente desde afuera.
-    // Para leerlos usa los getters de abajo.
     private String numeroCuenta;
     private String titular;
     private double saldo;
     private String tipo;
+    private boolean bloqueada; // true = tarjeta bloqueada, no puede operar
 
     // Úsalo cuando la cuenta arranca con dinero.
     public Cuenta(String numeroCuenta, String titular, double saldoInicial, String tipo) {
@@ -18,7 +19,7 @@ public abstract class Cuenta implements Transaccionable {
         this.titular      = titular;
         this.saldo        = saldoInicial;
         this.tipo         = tipo;
-        
+        this.bloqueada    = false; // empieza desbloqueada
     }
 
     // Úsalo cuando la cuenta arranca sin dinero (saldo = 0).
@@ -26,16 +27,16 @@ public abstract class Cuenta implements Transaccionable {
         this(numeroCuenta, titular, 0.0, tipo);
     }
 
-    // Deposita dinero. Rechaza montos negativos o en cero.
+    // Deposita dinero. Rechaza si la cuenta está bloqueada o el monto es inválido.
     @Override
     public boolean depositar(double monto) {
+        if (bloqueada) return false;
         if (monto <= 0) return false;
         this.saldo += monto;
         return true;
     }
 
-    // Igual que depositar(monto) pero guarda también una descripción del movimiento.
-    // Mismo nombre, diferente parámetro — esto se llama sobrecarga de métodos.
+    // Igual que depositar(monto) pero con descripción — sobrecarga de métodos.
     public boolean depositar(double monto, String descripcion) {
         return depositar(monto);
     }
@@ -45,10 +46,8 @@ public abstract class Cuenta implements Transaccionable {
         return saldo;
     }
 
-    // Cada tipo de cuenta retira diferente:
-    // Ahorros → no permite pasarse del saldo.
-    // Corriente → permite sobregiro.
-    // Premium → sin restricciones.
+    // Cada tipo de cuenta retira diferente — las subclases lo implementan.
+    // IMPORTANTE: las subclases también deben verificar si está bloqueada.
     @Override
     public abstract boolean retirar(double monto);
 
@@ -56,7 +55,6 @@ public abstract class Cuenta implements Transaccionable {
     public abstract String getTipoCuenta();
 
     // Transfiere dinero de esta cuenta a otra.
-    // Primero retira de aquí, luego deposita allá.
     public boolean transferir(double monto, Cuenta cuentaDestino) {
         if (this.retirar(monto)) {
             cuentaDestino.depositar(monto);
@@ -65,13 +63,29 @@ public abstract class Cuenta implements Transaccionable {
         return false;
     }
 
-    // Resumen corto: "Ahorros **** 4821 — María García"
+    // ── BLOQUEO DE TARJETA ────────────────────────────────────────────────────
+
+    // Bloquea la cuenta — no puede depositar, retirar ni transferir.
+    public void bloquear() {
+        this.bloqueada = true;
+    }
+
+    // Reactiva la cuenta.
+    public void desbloquear() {
+        this.bloqueada = false;
+    }
+
+    // Devuelve true si la cuenta está bloqueada.
+    public boolean estaBloqueada() {
+        return bloqueada;
+    }
+
+    // ── RESUMEN ───────────────────────────────────────────────────────────────
+
     public String getResumen() {
         return tipo + " " + numeroCuenta + " — " + titular;
     }
 
-    // Resumen con saldo incluido si pasas true.
-    // Mismo nombre, diferente parámetro — sobrecarga de métodos.
     public String getResumen(boolean mostrarSaldo) {
         if (mostrarSaldo) {
             return getResumen() + " | Saldo: $" + String.format("%,.0f", saldo);
@@ -79,11 +93,10 @@ public abstract class Cuenta implements Transaccionable {
         return getResumen();
     }
 
-    // Getters — para leer los atributos desde afuera.
+    // ── GETTERS / SETTER PROTEGIDO ────────────────────────────────────────────
     public String getNumeroCuenta() { return numeroCuenta; }
     public String getTitular()      { return titular; }
     public String getTipo()         { return tipo; }
 
-    // Solo las subclases pueden cambiar el saldo directamente.
     protected void setSaldo(double saldo) { this.saldo = saldo; }
 }
