@@ -13,6 +13,7 @@ public class Banco {
     private String nombre;
     private List<Cliente> clientes;
     private Cliente clienteActivo; // cliente con sesión abierta en este momento
+    private static Banco instancia; // lo creo para tener un banco global y que toda la app sirva con el mismo banco 
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────────
     public Banco(String nombre) {
@@ -31,6 +32,14 @@ public class Banco {
         clientes.add(cliente);
         return true;
     }
+
+    //
+    public static Banco getInstancia() {
+    if (instancia == null) {
+        instancia = new Banco("DESS");
+    }
+    return instancia;
+}
 
     // ── LOGIN / LOGOUT ────────────────────────────────────────────────────────
 
@@ -73,6 +82,7 @@ public class Banco {
         }
         return true;
     }
+
 
     // ── OPERACIONES ───────────────────────────────────────────────────────────
 
@@ -129,4 +139,6 @@ public class Banco {
     public boolean haySesionActiva() {
         return clienteActivo != null;
     }
+
+
 }
