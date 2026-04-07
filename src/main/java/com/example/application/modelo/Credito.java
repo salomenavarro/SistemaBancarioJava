@@ -63,5 +63,32 @@ public class Credito {
                 (Math.pow(1 + i, n) - 1);
     }
 
+    // RESUMEN SIMPLE
+    public String getResumen() {
+
+        return "Cliente: " + cliente +
+                " | Tipo: " + tipo +
+                " | Monto: " + monto +
+                " | Estado: " + estado;
+    }
+
+       // RESUMEN DETALLADO (sobrecarga)
+    public String getResumen(boolean detallado) {
+
+        if (!detallado) {
+            return getResumen();
+        }
+
+        return "Cliente: " + cliente +
+                "\nTipo: " + tipo +
+                "\nMonto: " + monto +
+                "\nPlazo: " + plazoMeses +
+                "\nTasa: " + tasaInteres +
+                "\nCuota mensual: " + calcularCuota() +
+                "\nEstado: " + estado;
+    }
+
+
+
     
 }
