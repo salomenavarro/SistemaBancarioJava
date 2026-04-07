@@ -88,7 +88,38 @@ public class Credito {
                 "\nEstado: " + estado;
     }
 
+    // GETTERS
 
+    public String getTipo() {
+        return tipo;
+    }
 
-    
+    public double getMonto() {
+        return monto;
+    }
+
+    public int getPlazoMeses() {
+        return plazoMeses;
+    }
+
+    public double getTasaInteres() {
+        return tasaInteres;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public String getCliente() {
+        return cliente;
+    }
+
+    // SETTER CON VALIDACIÓN DE ESTADO
+    public void setEstado(String estado) {
+
+        if (estado.equals("Pendiente") || estado.equals("Aprobado") || estado.equals("Rechazado")) {
+            this.estado = estado;
+        }
+    }
+
 }
