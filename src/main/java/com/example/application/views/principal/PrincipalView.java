@@ -41,6 +41,6 @@ public class PrincipalView extends Composite<VerticalLayout> {
         getContent().add(new UsuariosSection(banco.getClienteActivo()));
         getContent().add(new TransferenciasSection());
         getContent().add(new CreditosSection());
-        getContent().add(new PagosSection());
+        getContent().add(new PagosSection(banco));
     }
 }
