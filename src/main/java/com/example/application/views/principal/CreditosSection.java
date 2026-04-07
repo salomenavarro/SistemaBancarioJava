@@ -1,5 +1,6 @@
 package com.example.application.views.principal;
 
+import com.example.application.modelo.Credito;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -17,35 +18,8 @@ import java.util.List;
 
 public class CreditosSection extends VerticalLayout {
 
-        public static class SolicitudCredito {
-                private String cliente, tipo, monto, estado;
-
-                public SolicitudCredito(String cliente, String tipo, String monto, String estado) {
-                        this.cliente = cliente;
-                        this.tipo = tipo;
-                        this.monto = monto;
-                        this.estado = estado;
-                }
-
-                public String getCliente() {
-                        return cliente;
-                }
-
-                public String getTipo() {
-                        return tipo;
-                }
-
-                public String getMonto() {
-                        return monto;
-                }
-
-                public String getEstado() {
-                        return estado;
-                }
-        }
-
-        private List<SolicitudCredito> solicitudes = new ArrayList<>();
-        private Grid<SolicitudCredito> grid = new Grid<>(SolicitudCredito.class, false);
+        private List<Credito> solicitudes = new ArrayList<>();
+        private Grid<Credito> grid = new Grid<>(Credito.class, false);
 
         public CreditosSection() {
 
@@ -158,11 +132,13 @@ public class CreditosSection extends VerticalLayout {
                 btn.addClickListener(e -> {
 
                         if (!nombre.isEmpty()) {
-                                solicitudes.add(new SolicitudCredito(
-                                                nombre.getValue(),
+                                Credito credito = new Credito(
                                                 tipo.getValue(),
-                                                "$" + monto.getValue(),
-                                                "Pendiente"));
+                                                monto.getValue(),
+                                                Integer.parseInt(plazo.getValue()),
+                                                nombre.getValue());
+
+                                solicitudes.add(credito);
 
                                 grid.setItems(solicitudes);
 
@@ -187,10 +163,10 @@ public class CreditosSection extends VerticalLayout {
 
         private Div crearTabla() {
 
-                grid.addColumn(SolicitudCredito::getCliente).setHeader("CLIENTE");
-                grid.addColumn(SolicitudCredito::getTipo).setHeader("TIPO");
-                grid.addColumn(SolicitudCredito::getMonto).setHeader("MONTO");
-                grid.addColumn(SolicitudCredito::getEstado).setHeader("ESTADO");
+                grid.addColumn(Credito::getCliente).setHeader("CLIENTE");
+                grid.addColumn(Credito::getTipo).setHeader("TIPO");
+                grid.addColumn(Credito::getMonto).setHeader("MONTO");
+                grid.addColumn(Credito::getEstado).setHeader("ESTADO");
 
                 grid.setAllRowsVisible(true);
 
