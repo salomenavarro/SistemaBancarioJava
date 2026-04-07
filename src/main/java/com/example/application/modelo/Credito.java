@@ -53,5 +53,15 @@ public class Credito {
         }
     }
 
+    // MÉTODO PARA CALCULAR CUOTA MENSUAL
+    public double calcularCuota() {
+
+        double i = tasaInteres;
+        int n = plazoMeses;
+
+        return monto * (i * Math.pow(1 + i, n)) /
+                (Math.pow(1 + i, n) - 1);
+    }
+
     
 }
