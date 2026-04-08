@@ -104,13 +104,13 @@ public class TiposDeCuentasSection extends VerticalLayout {
 
             // Instancia según tipo seleccionado
             if ("Ahorros".equals(tipoCuenta.getValue())) {
-                nuevaCuenta = new CuentaAhorros(numeroCuenta, nombre.getValue(), saldo.getValue(), "Ahorros");
+                nuevaCuenta = new CuentaAhorros(numeroCuenta, nombre.getValue(), saldo.getValue());
             } 
             else if ("Corriente".equals(tipoCuenta.getValue())) {
-                nuevaCuenta = new CuentaCorriente(numeroCuenta, nombre.getValue(), saldo.getValue(), "Corriente", 500000);
+                nuevaCuenta = new CuentaCorriente(numeroCuenta, nombre.getValue(), saldo.getValue(), 500000);
             } 
             else if ("Premium".equals(tipoCuenta.getValue())) {
-                nuevaCuenta = new CuentaPremium(numeroCuenta, nombre.getValue(), saldo.getValue(), "Premium");
+                nuevaCuenta = new CuentaPremium(numeroCuenta, nombre.getValue(), saldo.getValue());
             }
 
             // Se delega al Banco
