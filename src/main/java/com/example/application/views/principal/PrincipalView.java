@@ -45,21 +45,28 @@ public class PrincipalView extends Composite<VerticalLayout> {
         PagosSection seccPagos = new PagosSection();
 
         // 2. Creamos el Hero PRIMERO (necesitamos los otros componentes para el scroll)
-        // Nota: seccCuentas aún no existe, así que lo pasaremos después o usaremos un marcador
-        // Pero para que el constructor de TiposDeCuentas funcione, el Hero debe estar listo.
-        
+        // Nota: seccCuentas aún no existe, así que lo pasaremos después o usaremos un
+        // marcador
+        // Pero para que el constructor de TiposDeCuentas funcione, el Hero debe estar
+        // listo.
+
         HeroSection hero = new HeroSection(
                 banco,
-                this::mostrarLogin, 
+                this::mostrarLogin,
                 new VerticalLayout(), // Marcador temporal para evitar error de parámetros
                 seccTransferencias,
                 seccPagos,
                 seccCreditos);
 
         // 3. Ahora creamos TiposDeCuentasSection pasándole el hero ya creado
-        TiposDeCuentasSection seccCuentas = new TiposDeCuentasSection(hero);
+        TiposDeCuentasSection seccCuentas = new TiposDeCuentasSection(hero, seccPagos);
 
         // 4. Actualización reactiva de la interfaz
+
+        seccPagos.setAlActualizar(() -> {
+            hero.actualizarInterfaz();
+        });
+
         seccTransferencias.setAlActualizar(() -> {
             hero.actualizarInterfaz();
             seccCuentas.actualizarGrid();
