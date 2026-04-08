@@ -1,7 +1,6 @@
 package com.example.application.views.principal;
 
 import com.example.application.modelo.*;
-
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.combobox.ComboBox;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -14,13 +13,14 @@ import com.vaadin.flow.component.textfield.TextField;
 
 public class TiposDeCuentasSection extends VerticalLayout {
 
-    // Instancia única compartida
     private Banco banco = Banco.getInstancia();
-
-    // Grid muestra objetos reales de Cuenta
     private Grid<Cuenta> grid = new Grid<>(Cuenta.class, false);
+    // CAMBIO: Variable para guardar la referencia a la sección de arriba
+    private HeroSection heroSection;
 
-    public TiposDeCuentasSection() {
+    public TiposDeCuentasSection(HeroSection heroSection) {
+
+        this.heroSection = heroSection;
 
         setWidthFull();
         setPadding(true);
@@ -28,100 +28,87 @@ public class TiposDeCuentasSection extends VerticalLayout {
         setAlignItems(Alignment.CENTER);
 
         add(
-            new H2("Tipos de Cuentas"),
-            crearTarjetas(),
-            crearFormulario(),
-            crearTabla()
-        );
+                new H2("Tipos de Cuentas"),
+                crearTarjetas(),
+                crearFormulario(),
+                crearTabla());
+
+        if (banco.getClienteActivo() != null) {
+            grid.setItems(banco.getClienteActivo().getCuentas());
+        }
+
+    }
+
+    public void actualizarGrid() {
+        if (banco.getClienteActivo() != null) {
+            grid.setItems(banco.getClienteActivo().getCuentas());
+        }
     }
 
     private HorizontalLayout crearTarjetas() {
-
-        // Solo visual
         Div ahorro = crearTarjeta("Cuenta Ahorros", "Guarda dinero", "3%");
         Div corriente = crearTarjeta("Cuenta Corriente", "Uso diario", "Frecuente");
         Div premium = crearTarjeta("Cuenta Premium", "Sin límites", "VIP");
 
-        return new HorizontalLayout(ahorro, corriente, premium);
+        HorizontalLayout layout = new HorizontalLayout(ahorro, corriente, premium);
+        layout.setSpacing(true);
+        return layout;
     }
 
     private Div crearTarjeta(String titulo, String desc, String dato) {
-
         Div card = new Div(new H3(titulo), new Paragraph(desc), new Span(dato));
-
+        // CAMBIO: Usamos las variables del CSS para que coincida con el tema
         card.getStyle()
                 .set("padding", "20px")
                 .set("border-radius", "15px")
-                .set("background", "#146551")
+                .set("background", "var(--dess-verde-oscuro)")
                 .set("color", "white")
-                .set("width", "250px");
-
+                .set("width", "250px")
+                .set("box-shadow", "0 4px 12px rgba(0,0,0,0.1)");
         return card;
     }
 
     private VerticalLayout crearFormulario() {
-
         TextField nombre = new TextField("Nombre");
         TextField cedula = new TextField("Cédula");
-
         ComboBox<String> tipoCuenta = new ComboBox<>("Tipo");
         tipoCuenta.setItems("Ahorros", "Corriente", "Premium");
-
         NumberField saldo = new NumberField("Saldo inicial");
-
         Button crear = new Button("Crear cuenta");
+        crear.addClassName("btn-main"); // CAMBIO: Clase del CSS para botones
 
         crear.addClickListener(e -> {
-
-            // Validaciones mínimas
-            if (tipoCuenta.getValue() == null) {
-                Notification.show("Selecciona tipo de cuenta");
+            if (tipoCuenta.getValue() == null || saldo.getValue() == null || nombre.isEmpty() || cedula.isEmpty()) {
+                Notification.show("Completa todos los campos");
                 return;
             }
 
-            if (saldo.isEmpty() || saldo.getValue() == null) {
-                Notification.show("Ingresa saldo");
-                return;
-            }
-
-            String correo = cedula.getValue() + "@test.com";
-            String pass = "1234";
-
-            // Busca cliente o lo crea si no existe
-            Cliente cliente = banco.buscarClientePorCedula(cedula.getValue());
-
+            Cliente cliente = banco.getClienteActivo();
             if (cliente == null) {
-                cliente = new Cliente(nombre.getValue(), cedula.getValue(), correo, pass);
-                banco.registrarCliente(cliente);
+                Notification.show("Debes iniciar sesión");
+                return;
             }
-
-            // Se asegura de tener sesión activa
-            banco.iniciarSesion(correo, pass);
 
             String numeroCuenta = String.valueOf(System.currentTimeMillis());
-
             Cuenta nuevaCuenta = null;
 
-            // Instancia según tipo seleccionado
             if ("Ahorros".equals(tipoCuenta.getValue())) {
-                nuevaCuenta = new CuentaAhorros(numeroCuenta, nombre.getValue(), saldo.getValue());
-            } 
-            else if ("Corriente".equals(tipoCuenta.getValue())) {
-                nuevaCuenta = new CuentaCorriente(numeroCuenta, nombre.getValue(), saldo.getValue(), 500000);
-            } 
-            else if ("Premium".equals(tipoCuenta.getValue())) {
-                nuevaCuenta = new CuentaPremium(numeroCuenta, nombre.getValue(), saldo.getValue());
+                nuevaCuenta = new CuentaAhorros(numeroCuenta, nombre.getValue(), saldo.getValue(), "Ahorros");
+            } else if ("Corriente".equals(tipoCuenta.getValue())) {
+                nuevaCuenta = new CuentaCorriente(numeroCuenta, nombre.getValue(), saldo.getValue(), "Corriente",
+                        500000);
+            } else if ("Premium".equals(tipoCuenta.getValue())) {
+                nuevaCuenta = new CuentaPremium(numeroCuenta, nombre.getValue(), saldo.getValue(), "Premium");
             }
 
-            // Se delega al Banco
-            boolean creada = banco.abrirCuenta(nuevaCuenta);
-
-            if (creada) {
-                // Se muestran objetos reales en el grid
+            if (banco.abrirCuenta(nuevaCuenta)) {
                 grid.setItems(banco.getClienteActivo().getCuentas());
+                // CAMBIO: Llamamos a la actualización de las tarjetas de arriba
+                if (heroSection != null) {
+                    heroSection.actualizarInterfaz();
+                }
+
                 Notification.show("Cuenta creada correctamente");
-            } else {
-                Notification.show("Ya tienes una cuenta de ese tipo o error");
             }
 
             nombre.clear();
@@ -131,15 +118,18 @@ public class TiposDeCuentasSection extends VerticalLayout {
         });
 
         FormLayout form = new FormLayout(nombre, cedula, tipoCuenta, saldo, crear);
-        return new VerticalLayout(form);
+        VerticalLayout contenedor = new VerticalLayout(form);
+        contenedor.addClassName("box"); // CAMBIO: Clase del CSS para fondo blanco
+        return contenedor;
     }
 
     private Div crearTabla() {
-
-        // Muestra datos reales de Cuenta
         grid.addColumn(Cuenta::getTipoCuenta).setHeader("Tipo");
         grid.addColumn(Cuenta::getSaldo).setHeader("Saldo");
 
-        return new Div(grid);
+        Div contenedorGrid = new Div(grid);
+        contenedorGrid.addClassName("grid-box"); // CAMBIO: Clase del CSS para el grid
+        contenedorGrid.setWidthFull();
+        return contenedorGrid;
     }
 }

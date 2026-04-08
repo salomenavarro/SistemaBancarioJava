@@ -12,13 +12,15 @@ public class Banco {
     // ── ATRIBUTOS ─────────────────────────────────────────────────────────────
     private String nombre;
     private List<Cliente> clientes;
+    private List<Cuenta> cuentas = new ArrayList<>();
     private Cliente clienteActivo; // cliente con sesión abierta en este momento
-    private static Banco instancia; // lo creo para tener un banco global y que toda la app sirva con el mismo banco 
+    private static Banco instancia; // lo creo para tener un banco global y que toda la app sirva con el mismo banco
+
 
     // ── CONSTRUCTOR ───────────────────────────────────────────────────────────
-    public Banco(String nombre) {
-        this.nombre        = nombre;
-        this.clientes      = new ArrayList<>();
+    private Banco(String nombre) {
+        this.nombre = nombre;
+        this.clientes = new ArrayList<>();
         this.clienteActivo = null;
     }
 
@@ -27,19 +29,37 @@ public class Banco {
     // Registra un cliente nuevo.
     // Rechaza si ya existe alguien con la misma cédula o el mismo email.
     public boolean registrarCliente(Cliente cliente) {
-        if (buscarClientePorCedula(cliente.getCedula()) != null) return false;
-        if (buscarClientePorEmail(cliente.getCorreoElectronico()) != null) return false;
+        if (buscarClientePorCedula(cliente.getCedula()) != null)
+            return false;
+        if (buscarClientePorEmail(cliente.getCorreoElectronico()) != null)
+            return false;
         clientes.add(cliente);
         return true;
     }
 
     //
     public static Banco getInstancia() {
-    if (instancia == null) {
+           if (instancia == null) {
         instancia = new Banco("DESS");
+
+        // 🔥 CUENTAS DE PRUEBA
+
+        Cliente c1 = new Cliente("Juan Perez", "1001", "juan@test.com", "1234");
+        Cliente c2 = new Cliente("Maria Gomez", "1002", "maria@test.com", "1234");
+
+        instancia.registrarCliente(c1);
+        instancia.registrarCliente(c2);
+
+        Cuenta a1 = new CuentaAhorros("1111", "Juan Perez", 500000, "Ahorros");
+        Cuenta cta2 = new CuentaCorriente("2222", "Maria Gomez", 300000, "Corriente", 500000);
+        Cuenta p1 = new CuentaPremium("3333", "Maria Gomez", 1000000, "Premium");
+
+        c1.agregarCuenta(a1);
+        c2.agregarCuenta(cta2);
+        c2.agregarCuenta(p1);
     }
     return instancia;
-}
+    }
 
     // ── LOGIN / LOGOUT ────────────────────────────────────────────────────────
 
@@ -67,22 +87,30 @@ public class Banco {
     // - No hay sesión activa
     // - El cliente ya tiene una cuenta del mismo tipo
     public boolean abrirCuenta(Cuenta cuenta) {
-        if (clienteActivo == null) return false;
-        if (!puedeAbrirCuenta(cuenta.getTipoCuenta())) return false;
+        if (clienteActivo == null)
+            return false;
+
+        if (!puedeAbrirCuenta(cuenta.getTipoCuenta()))
+            return false;
+
         clienteActivo.agregarCuenta(cuenta);
+
+        cuentas.add(cuenta);
+
         return true;
     }
 
     // Verifica que el cliente activo no tenga ya una cuenta de ese tipo.
     // Un cliente solo puede tener UNA cuenta de cada tipo.
     public boolean puedeAbrirCuenta(String tipoCuenta) {
-        if (clienteActivo == null) return false;
+        if (clienteActivo == null)
+            return false;
         for (Cuenta c : clienteActivo.getCuentas()) {
-            if (c.getTipoCuenta().equals(tipoCuenta)) return false;
+            if (c.getTipoCuenta().equals(tipoCuenta))
+                return false;
         }
         return true;
     }
-
 
     // ── OPERACIONES ───────────────────────────────────────────────────────────
 
@@ -91,12 +119,16 @@ public class Banco {
     // - No hay sesión activa
     // - El cliente activo no tiene cuentas
     // - El monto es inválido
-    public boolean realizarTransferencia(Cuenta cuentaOrigen,
-                                         Cuenta cuentaDestino,
-                                         double monto) {
-        if (clienteActivo == null) return false;
-        if (clienteActivo.getCuentas().isEmpty()) return false;
-        if (monto <= 0) return false;
+    public boolean realizarTransferencia(Cuenta cuentaOrigen, Cuenta cuentaDestino, double monto) {
+        if (clienteActivo == null || monto <= 0)
+            return false;
+
+        if (cuentaOrigen == null || cuentaDestino == null)
+            return false;
+
+        if (!clienteActivo.getCuentas().contains(cuentaOrigen))
+            return false;
+
         return cuentaOrigen.transferir(monto, cuentaDestino);
     }
 
@@ -106,9 +138,12 @@ public class Banco {
     // - El cliente activo no tiene cuentas
     // - El monto es inválido
     public boolean realizarPago(Cuenta cuentaOrigen, double monto) {
-        if (clienteActivo == null) return false;
-        if (clienteActivo.getCuentas().isEmpty()) return false;
-        if (monto <= 0) return false;
+        if (clienteActivo == null)
+            return false;
+        if (clienteActivo.getCuentas().isEmpty())
+            return false;
+        if (monto <= 0)
+            return false;
         return cuentaOrigen.retirar(monto);
     }
 
@@ -117,7 +152,8 @@ public class Banco {
     // Busca un cliente por cédula. Devuelve null si no existe.
     public Cliente buscarClientePorCedula(String cedula) {
         for (Cliente c : clientes) {
-            if (c.getCedula().equals(cedula)) return c;
+            if (c.getCedula().equals(cedula))
+                return c;
         }
         return null;
     }
@@ -125,20 +161,28 @@ public class Banco {
     // Busca un cliente por email. Devuelve null si no existe.
     public Cliente buscarClientePorEmail(String email) {
         for (Cliente c : clientes) {
-            if (c.getCorreoElectronico().equals(email)) return c;
+            if (c.getCorreoElectronico().equals(email))
+                return c;
         }
         return null;
     }
 
     // ── GETTERS ───────────────────────────────────────────────────────────────
-    public String getNombre()          { return nombre; }
-    public Cliente getClienteActivo()  { return clienteActivo; }
-    public List<Cliente> getClientes() { return clientes; }
+    public String getNombre() {
+        return nombre;
+    }
+
+    public Cliente getClienteActivo() {
+        return clienteActivo;
+    }
+
+    public List<Cliente> getClientes() {
+        return clientes;
+    }
 
     // Devuelve true si hay un cliente con sesión abierta.
     public boolean haySesionActiva() {
         return clienteActivo != null;
     }
-
 
 }

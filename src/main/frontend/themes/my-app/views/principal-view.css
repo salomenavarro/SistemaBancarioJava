@@ -602,3 +602,61 @@ h2.login_titulo {
 .login_section .login_link:hover {
   color: var(--dess-verde-oscuro);
 }
+
+/* ══════════════════════════════════════════════════════════════════════════════
+   HERO SECTION - CARRUSEL DE TARJETAS
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* Contenedor del Scroller */
+.hero_tarjeta_scroller {
+    padding: 10px 0;
+    /* Evita que el scroller muestre barras de desplazamiento feas en algunos navegadores */
+    scrollbar-width: none; 
+}
+
+.hero_tarjeta_scroller::-webkit-scrollbar {
+    display: none; /* Oculta scroll en Chrome/Safari */
+}
+
+/* Ajustes para la tarjeta individual dentro del carrusel */
+.hero_section .hero_tarjeta {
+    flex-shrink: 0; /* CRITICAL: Evita que la tarjeta se encoja */
+    width: 380px;   /* Ancho fijo para cada tarjeta */
+    margin-right: 20px; /* Espacio entre tarjetas */
+    transition: transform 0.3s ease;
+}
+
+.hero_section .hero_tarjeta:hover {
+    transform: translateY(-5px);
+}
+
+/* Contenedor interno que sujeta todas las tarjetas */
+.hero_section .hero_contenedor {
+    align-items: center;
+    overflow: hidden;
+}
+
+/* Ajuste para que el texto largo de nombres no rompa la tarjeta */
+.hero_section .tarjeta_nombre {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn_flecha_carrusel {
+    background: transparent;
+    color: var(--dess-verde-oscuro);
+    font-size: 24px;
+    border: none;
+    cursor: pointer;
+    min-width: 40px;
+}
+
+.btn_flecha_carrusel:hover {
+    color: var(--dess-verde);
+    transform: scale(1.1);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}

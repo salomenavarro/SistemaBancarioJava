@@ -44,7 +44,6 @@ public class UsuariosSection extends VerticalLayout {
 
         contenido.add(crearSeccionDatos());
         contenido.add(crearSeccionContrasena());
-        contenido.add(crearSeccionTarjeta());
 
         add(titulo, contenido);
     }
@@ -132,35 +131,4 @@ public class UsuariosSection extends VerticalLayout {
         return seccion;
     }
 
-    // Sección 3: Bloqueo de tarjeta y límite diario
-    private Component crearSeccionTarjeta() {
-        VerticalLayout seccion = new VerticalLayout();
-        seccion.addClassName("card-fintech");
-        seccion.getStyle().set("border-left", "6px solid #589A8D");
-
-        H3 titulo = new H3("Gestión de Tarjeta");
-        titulo.getStyle().set("color", "#146551");
-
-        Checkbox chkBloqueo = new Checkbox("Bloqueo temporal de tarjeta");
-        chkBloqueo.addValueChangeListener(event -> {
-            if (event.getValue()) {
-                Notification.show("Tarjeta bloqueada", 3000, Notification.Position.MIDDLE)
-                            .addThemeVariants(NotificationVariant.LUMO_ERROR);
-            } else {
-                Notification.show("Tarjeta reactivada")
-                            .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-            }
-        });
-
-        Select<String> limite = new Select<>();
-        limite.setLabel("Límite diario de compras");
-        limite.setItems("$500.000", "$1.000.000", "$2.000.000");
-        limite.setValue("$1.000.000");
-        limite.addValueChangeListener(e ->
-            Notification.show("Nuevo límite: " + e.getValue())
-        );
-
-        seccion.add(titulo, chkBloqueo, limite);
-        return seccion;
-    }
 }

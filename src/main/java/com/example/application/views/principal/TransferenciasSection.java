@@ -17,180 +17,133 @@ import java.util.List;
 
 public class TransferenciasSection extends VerticalLayout {
 
-    // Instancia única compartida en toda la app
     private Banco banco = Banco.getInstancia();
-
     private ComboBox<Cuenta> selectorOrigen;
     private ComboBox<Cuenta> selectorDestino;
-
     private TextField campoDestinatario;
     private NumberField campoMonto;
-
     private Div panelConfirmacion;
     private VerticalLayout listaRecientes;
+    private Runnable alActualizar;
 
     public TransferenciasSection() {
+        // CAMBIO: Se añade la clase principal para el CSS
+        addClassName("transferencias_section");
         setWidth("100%");
         setPadding(false);
         setSpacing(false);
 
+        // CAMBIO: Clases para el encabezado
         Div encabezado = new Div();
-        encabezado.add(new Span("Operaciones"), new H2("Transferencias"));
+        encabezado.addClassName("section_encabezado");
+        
+        Span etiqueta = new Span("Operaciones");
+        etiqueta.addClassName("section_etiqueta");
+        
+        H2 titulo = new H2("Transferencias");
+        titulo.addClassName("section_titulo");
+        
+        encabezado.add(etiqueta, titulo);
 
         HorizontalLayout columnas = new HorizontalLayout();
+        columnas.addClassName("transferencias_columnas"); // CAMBIO: Clase para layout
         columnas.setWidth("100%");
         columnas.add(crearFormulario(), crearPanelRecientes());
 
         add(encabezado, columnas);
     }
 
+    public void setAlActualizar(Runnable alActualizar) {
+        this.alActualizar = alActualizar;
+    }
+
     private Div crearFormulario() {
-        Div formulario = new Div();
+        VerticalLayout form = new VerticalLayout();
+        form.addClassName("transferencias_formulario"); // CAMBIO: Clase del CSS
 
-        selectorOrigen = new ComboBox<>("Cuenta origen");
-        selectorDestino = new ComboBox<>("Cuenta destino");
+        selectorOrigen = new ComboBox<>("Cuenta de origen");
+        selectorOrigen.setItemLabelGenerator(Cuenta::getResumen);
+        selectorOrigen.addClassName("campo_full");
 
-        // Cuando cambia origen, se actualiza destino para excluirla
-        selectorOrigen.addValueChangeListener(e -> actualizarDestino());
+        campoDestinatario = new TextField("Nombre del destinatario");
+        campoDestinatario.addClassName("campo_full");
+
+        selectorDestino = new ComboBox<>("Cuenta de destino");
+        selectorDestino.setItemLabelGenerator(Cuenta::getResumen);
+        selectorDestino.addClassName("campo_full");
+
+        campoMonto = new NumberField("Monto a transferir");
+        campoMonto.setPrefixComponent(new Span("$"));
+        campoMonto.addClassName("campo_full");
+
+        Button btnTransferir = new Button("Transferir ahora", e -> prepararConfirmacion());
+        btnTransferir.addClassName("btn_primario_verde"); // CAMBIO: Clase del CSS
+        btnTransferir.setWidthFull();
 
         cargarCuentas();
 
-        campoDestinatario = new TextField("Nombre del destinatario");
-        campoMonto = new NumberField("Monto");
-
-        panelConfirmacion = crearPanelConfirmacion();
-
-        Button btnTransferir = new Button("Transferir ahora");
-        btnTransferir.addClickListener(e -> mostrarConfirmacion());
-
-        formulario.add(
-                new H3("Nueva transferencia"),
-                selectorOrigen,
-                selectorDestino,
-                campoDestinatario,
-                campoMonto,
-                panelConfirmacion,
-                btnTransferir
-        );
-
-        return formulario;
+        form.add(selectorOrigen, campoDestinatario, selectorDestino, campoMonto, btnTransferir);
+        return new Div(form, crearPanelConfirmacion());
     }
 
     private void cargarCuentas() {
-        if (!banco.haySesionActiva()) {
-            Notification.show("Debes iniciar sesión");
-            return;
+        if (banco.getClienteActivo() != null) {
+            List<Cuenta> cuentasCliente = banco.getClienteActivo().getCuentas();
+            selectorOrigen.setItems(cuentasCliente);
+            selectorDestino.setItems(banco.getClientes().stream()
+                    .flatMap(c -> c.getCuentas().stream())
+                    .toList());
         }
-
-        Cliente cliente = banco.getClienteActivo();
-        List<Cuenta> cuentas = cliente.getCuentas();
-
-        selectorOrigen.setItems(cuentas);
-        selectorDestino.setItems(cuentas);
-
-        // Muestra información útil para identificar cuentas
-        selectorOrigen.setItemLabelGenerator(c ->
-                c.getTipoCuenta() + " - $" + c.getSaldo() + " (" + c.getNumeroCuenta() + ")"
-        );
-
-        selectorDestino.setItemLabelGenerator(c ->
-                c.getTipoCuenta() + " - $" + c.getSaldo() + " (" + c.getNumeroCuenta() + ")"
-        );
-    }
-
-    // Filtra cuentas destino excluyendo la cuenta origen seleccionada
-    private void actualizarDestino() {
-
-        if (!banco.haySesionActiva()) return;
-
-        List<Cuenta> cuentas = banco.getClienteActivo().getCuentas();
-        Cuenta origen = selectorOrigen.getValue();
-
-        if (origen == null) {
-            selectorDestino.setItems(cuentas);
-            return;
-        }
-
-        selectorDestino.setItems(
-                cuentas.stream()
-                        .filter(c -> c != origen)
-                        .toList()
-        );
     }
 
     private Div crearPanelConfirmacion() {
-        Div panel = new Div();
-        panel.setVisible(false);
+        panelConfirmacion = new Div();
+        panelConfirmacion.addClassName("transferencias_confirmacion"); // CAMBIO: Clase del CSS
+        panelConfirmacion.setVisible(false);
 
-        Button confirmar = new Button("Confirmar");
-        confirmar.addClickListener(e -> ejecutarTransferencia());
+        H3 titulo = new H3("¿Confirmar transferencia?");
+        titulo.addClassName("confirmacion_titulo");
 
-        panel.add(new Paragraph("¿Confirmas la transferencia?"), confirmar);
-        return panel;
+        Button btnSi = new Button("Confirmar", e -> ejecutarTransferencia());
+        btnSi.addClassName("btn_primario_verde");
+
+        Button btnNo = new Button("Cancelar", e -> panelConfirmacion.setVisible(false));
+        btnNo.addClassName("btn_cancelar");
+
+        panelConfirmacion.add(titulo, new HorizontalLayout(btnSi, btnNo));
+        return panelConfirmacion;
     }
 
-    private void mostrarConfirmacion() {
-
-        if (!banco.haySesionActiva()) {
-            Notification.show("Debes iniciar sesión");
+    private void prepararConfirmacion() {
+        if (selectorOrigen.isEmpty() || selectorDestino.isEmpty() || campoMonto.getValue() == null) {
+            Notification.show("Complete todos los campos");
             return;
         }
-
-        if (selectorOrigen.isEmpty() || selectorDestino.isEmpty()) {
-            Notification.show("Selecciona cuentas");
-            return;
-        }
-
-        if (campoDestinatario.isEmpty()) {
-            Notification.show("Ingresa destinatario");
-            return;
-        }
-
-        if (campoMonto.isEmpty() || campoMonto.getValue() == null || campoMonto.getValue() <= 0) {
+        if (campoMonto.getValue() <= 0) {
             Notification.show("Monto inválido");
             return;
         }
-
-        // Seguridad lógica adicional
         if (selectorOrigen.getValue() == selectorDestino.getValue()) {
             Notification.show("No puedes transferir a la misma cuenta");
             return;
         }
-
         panelConfirmacion.setVisible(true);
     }
 
     private void ejecutarTransferencia() {
-
         Cuenta origen = selectorOrigen.getValue();
         Cuenta destino = selectorDestino.getValue();
         double monto = campoMonto.getValue();
 
-        // Delega operación al modelo
-        boolean ok = banco.realizarTransferencia(origen, destino, monto);
-
-        if (ok) {
-            agregarItemReciente(
-                    campoDestinatario.getValue(),
-                    origen.getTipoCuenta(),
-                    "-$" + monto,
-                    "Hoy",
-                    false
-            );
-
-            Notification.show("Transferencia realizada")
-                    .addThemeVariants(NotificationVariant.LUMO_SUCCESS);
-
+        if (banco.realizarTransferencia(origen, destino, monto)) {
+            agregarItemReciente(campoDestinatario.getValue(), origen.getTipoCuenta(), "-$" + monto, "Hoy", false);
+            Notification.show("Transferencia realizada").addThemeVariants(NotificationVariant.LUMO_SUCCESS);
+            if (alActualizar != null) alActualizar.run();
             limpiarFormulario();
-
-            // Refresca datos para mostrar saldos actualizados
             cargarCuentas();
-
         } else {
-            Notification.show("Error en la transferencia")
-                    .addThemeVariants(NotificationVariant.LUMO_ERROR);
+            Notification.show("Error en la transferencia").addThemeVariants(NotificationVariant.LUMO_ERROR);
         }
-
         panelConfirmacion.setVisible(false);
     }
 
@@ -203,18 +156,28 @@ public class TransferenciasSection extends VerticalLayout {
 
     private Div crearPanelRecientes() {
         listaRecientes = new VerticalLayout();
-        return new Div(new H3("Transferencias recientes"), listaRecientes);
+        listaRecientes.setPadding(false);
+        
+        Div contenedor = new Div(new H3("Transferencias recientes"), listaRecientes);
+        contenedor.addClassName("transferencias_recientes"); // CAMBIO: Clase del CSS
+        return contenedor;
     }
 
-    private void agregarItemReciente(String nombre, String banco,
-                                     String monto, String fecha, boolean entrada) {
+    private void agregarItemReciente(String nombre, String bancoNombre, String monto, String fecha, boolean entrada) {
+        HorizontalLayout fila = new HorizontalLayout();
+        fila.addClassName("transferencia_item"); // CAMBIO: Estilo de fila
 
-        // Solo representación visual
-        HorizontalLayout fila = new HorizontalLayout(
-                new Span(nombre),
-                new Span(monto)
-        );
+        Div info = new Div();
+        Span n = new Span(nombre);
+        n.addClassName("transferencia_nombre");
+        Span b = new Span(bancoNombre);
+        b.addClassName("transferencia_banco");
+        info.add(n, b);
 
+        Span m = new Span(monto);
+        m.addClassName(entrada ? "monto_entrada" : "monto_salida"); // CAMBIO: Color según tipo
+
+        fila.add(info, m);
         listaRecientes.addComponentAsFirst(fila);
     }
 }

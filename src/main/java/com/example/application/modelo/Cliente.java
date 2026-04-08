@@ -32,11 +32,10 @@ public class Cliente {
     }
 
     // ── CONSTRUCTOR BÁSICO
-    public Cliente(String nombreCompleto, String cedula,
-                   String correoElectronico, String contrasena) {
-        this(nombreCompleto, cedula, correoElectronico, contrasena, "", "");
+   public Cliente(String nombreCompleto, String cedula, String correoElectronico, String contrasena) {
+        this(nombreCompleto, cedula, correoElectronico, contrasena, "Sin celular", "Sin dirección");
     }
-
+    
     // ── CUENTAS BANCARIAS 
     // Banco.abrirCuenta() llama a este método — no lo llames directo desde las secciones.
 
