@@ -15,7 +15,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  */
 @SpringBootApplication
-@StyleSheet(Lumo.STYLESHEET)
+@StyleSheet(Lumo.STYLESHEET) 
 @StyleSheet("styles.css")
 @Theme(value = "my-app")
 public class Application implements AppShellConfigurator {
